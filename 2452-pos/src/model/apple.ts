@@ -1,7 +1,7 @@
 import { assert } from '../assertions.ts';
 
 export default class Apple {
-    #price: number;
+    readonly #price: number = 1.5;
     #quantity: number;
 
     constructor(price: number) {
@@ -11,8 +11,8 @@ export default class Apple {
     }
 
     #checkApple() {
-        assert(this.#price >= 0, "Price must be greater than zero.");
-        assert(this.#quantity >= 0, "Quantity must be greater than zero.");
+        assert(this.#price >= 0, "Price must be at least zero.");
+        assert(this.#quantity >= 0, "Quantity must be at least zero.");
     }
 
     get price(): number {
@@ -21,20 +21,5 @@ export default class Apple {
 
     get quantity(): number {
         return this.#quantity;
-    }
-
-    addProduct(): void {
-        this.#quantity++;
-        this.#checkApple();
-    }
-
-    removeProduct(): boolean {
-        let removed = false;
-        if (this.#quantity - 1 >= 0) {
-            this.#quantity--;
-            removed = true;
-        }
-        this.#checkApple();
-        return removed;
     }
 }

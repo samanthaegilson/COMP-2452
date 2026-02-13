@@ -8,31 +8,13 @@ date: Winter 2026
 
 ```mermaid
 classDiagram
-  class Inventory {
-    -Array~Products~ products
-
-    +addProduct(Product product) void
-    +removeProduct(Product product) void
-  }
-  Inventory --* Product
-
-  note for Inventory "Class invariants:  <ul>
-    <li> products != null
-    <li> loop: no products are null in products
-    </ul>"
-
   class Product {
     <<interface>>
-    +addProduct() void
-    +removeProduct() void
   }
 
   class Apple {
     -number price
     -number quantity
-
-    +addProduct() void
-    +removeProduct() void
   }
   Apple ..|> Product
 
@@ -44,9 +26,6 @@ classDiagram
   class Banana {
     -number price
     -number quantity
-
-    +addProduct() void
-    +removeProduct() void
   }
   Banana ..|> Product
 
@@ -69,14 +48,13 @@ classDiagram
     </ul>"
 
   class Receipt {
-    -Array~Product~ products
+    -Cart cart
     -number total
   }
-  Receipt --o Product
+  Receipt --o Cart
 
   note for Receipt "Class invariants:  <ul>
-    <li> products != null
+    <li> cart != null
     <li> total >= 0
-    <li> loop: no products are null in products
     </ul>"
 ```
