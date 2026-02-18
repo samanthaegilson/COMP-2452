@@ -1,3 +1,3 @@
-import CartController from "./controller/cart-controller.ts";
+import CartController from "./controller/cart-controller";
 
 new CartController();

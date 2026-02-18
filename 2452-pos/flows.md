@@ -34,5 +34,6 @@ flowchart
     cart ==check out==> checkOut
     checkOut -.receipt made.-> receipt
     checkOut -.empty cart.-> cart
+    checkOut -.payment fails.-> cart
   end
 ```

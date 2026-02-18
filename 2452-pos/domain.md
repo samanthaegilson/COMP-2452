@@ -10,6 +10,11 @@ date: Winter 2026
 classDiagram
   class Product {
     <<interface>>
+    -number price
+    -number quantity
+
+    +increaseQuantity() void
+    +decreaseQuantity() void
   }
 
   class Apple {

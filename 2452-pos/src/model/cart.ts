@@ -1,15 +1,17 @@
 import { assert } from '../assertions.ts';
 import Apple from './apple.ts';
+import Banana from './banana.ts';
 import type Listener from './listener.ts';
 import type Product from './product.ts';
 
 export default class Cart {
-    #products: Product[];
+    #products: Array<Product>;
     #listeners: Array<Listener>;
 
     constructor() {
         this.#products = new Array<Product>();
         this.#listeners = new Array<Listener>();
+        this.#checkCart();
     }
 
     #checkCart(): void {
@@ -23,26 +25,50 @@ export default class Cart {
     }
 
     addProduct(product: Product): void {
-        // should get the one from the array??
+        let found = false;
+        let index = 0;
 
-        if (product instanceof Apple) {
-            // increment apple quantity
-        } else {
-            // increment banana quantity
+        while (!found && index < this.#products.length) {
+            if (product.constructor === this.#products[index].constructor) {
+                this.#products[index].increaseQuantity();
+                found = true;
+            }
+            index++;
         }
+
+        if (!found) {
+            if (product instanceof Apple) {
+                this.#products.push(new Apple());
+            } else {
+                this.#products.push(new Banana());
+            }
+        }
+
+        this.#notifyAll();
     }
 
-    removeProduct(product: Product): void {
-        if (product instanceof Apple) {
-            // decrement apple quantity
-        } else {
-            // decrement banana quantity
+    removeProduct(product: Product): boolean {
+        let removed = false;
+        let found = false;
+        let index = 0;
+
+        while (!found && index < this.#products.length) {
+            if (product.constructor === this.#products[index].constructor) {
+                found = true;
+                if (!this.#products[index].decreaseQuantity()) {
+                    this.#products.splice(index, 1);
+                }
+                removed = true;
+            }
+            index++;
         }
+
+        this.#notifyAll();
+        return removed;
     }
 
     #notifyAll() {
-        this.#listeners
-            .forEach((l) => l.notify());
+        this.#listeners.forEach((l) => l.notify());
     }
 
     registerListener(listener: Listener) {

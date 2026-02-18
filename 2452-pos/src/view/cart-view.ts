@@ -1,5 +1,5 @@
-import type CartController from "../controller/cart-controller.ts";
-import type Cart from "../model/cart.ts";
+import type CartController from "../controller/cart-controller";
+import type Cart from "../model/cart";
 
 export default class CartView {
     #cart: Cart;
@@ -35,7 +35,7 @@ export default class CartView {
 
         this.#cart.products.forEach((p) => {
             let prodEl = document.createElement("li");
-            prodEl.innerHTML = `<strong>${p.price}</strong>`;
+            prodEl.innerHTML = `<strong>${p.constructor.name + " x" + p.quantity}</strong>`;
             this.#productsEL.appendChild(prodEl);
         })
     }
