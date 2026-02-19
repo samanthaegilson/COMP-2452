@@ -39,6 +39,7 @@ export default class Cart {
      * @param product the product to add
      */
     addProduct(product: Product): void {
+        this.#checkCart();
         let found = false;
         let index = 0;
 
@@ -58,6 +59,7 @@ export default class Cart {
         }
 
         this.#notifyAll();
+        this.#checkCart();
     }
 
     /**
@@ -67,6 +69,7 @@ export default class Cart {
      * @returns if the product was removed or not
      */
     removeProduct(product: Product): boolean {
+        this.#checkCart();
         let removed = false;
         let found = false;
         let index = 0;
@@ -86,6 +89,7 @@ export default class Cart {
         }
 
         this.#notifyAll();
+        this.#checkCart();
         return removed;
     }
 
@@ -93,15 +97,19 @@ export default class Cart {
      * Empties the products list
      */
     emptyContents(): void {
+        this.#checkCart();
         this.#products.length = 0;
         this.#notifyAll();
+        this.#checkCart();
     }
 
     /**
      * Notifies listeners of changes
      */
     #notifyAll(): void {
+        this.#checkCart();
         this.#listeners.forEach((l) => l.notify());
+        this.#checkCart();
     }
 
     /**
@@ -110,6 +118,8 @@ export default class Cart {
      * @param listener the listener to add
      */
     registerListener(listener: Listener) {
+        this.#checkCart();
         this.#listeners.push(listener);
+        this.#checkCart();
     }
 }

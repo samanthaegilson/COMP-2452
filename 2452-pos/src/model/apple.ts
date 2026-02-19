@@ -12,7 +12,7 @@ export default class Apple {
      */
     constructor() {
         this.#quantity = 1;
-        this.#checkApple;
+        this.#checkApple();
     }
 
     /**
@@ -31,6 +31,7 @@ export default class Apple {
      * Increments the quantity of the apple
      */
     increaseQuantity(): void {
+        this.#checkApple();
         this.#quantity++;
         this.#checkApple();
     }
@@ -41,6 +42,7 @@ export default class Apple {
      * @returns if there was an apple to remove or not
      */
     decreaseQuantity(): boolean {
+        this.#checkApple();
         let decreased = false;
         // Only removes an apple if there is one available
         if (this.#quantity > 1) {

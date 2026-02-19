@@ -12,7 +12,7 @@ export default class Banana {
      */
     constructor() {
         this.#quantity = 1;
-        this.#checkBanana;
+        this.#checkBanana();
     }
 
     /**
@@ -31,6 +31,7 @@ export default class Banana {
      * Increments the quantity of the banana
      */
     increaseQuantity(): void {
+        this.#checkBanana();
         this.#quantity++;
         this.#checkBanana();
     }
@@ -41,6 +42,7 @@ export default class Banana {
      * @returns if there was a banana to remove or not
      */
     decreaseQuantity(): boolean {
+        this.#checkBanana();
         let decreased = false;
         // Only removes a banana if there is one available
         if (this.#quantity > 1) {
