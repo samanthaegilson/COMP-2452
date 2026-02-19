@@ -4,6 +4,14 @@ author: Samantha egilson (egilsons@myumanitoba.ca)
 date: Winter 2026
 ---
 
+# Changes
+
+* I added increaseQuantity and decreaseQuantity methods to the products
+* I added price and quantity variables to the Product interface
+* I changed an invariant property for the Receipt class from cart != null to
+  cart.products.length > 0
+* I added an emptyContents method to the Cart class
+
 # Domain model
 
 ```mermaid
@@ -14,12 +22,15 @@ classDiagram
     -number quantity
 
     +increaseQuantity() void
-    +decreaseQuantity() void
+    +decreaseQuantity() boolean
   }
 
   class Apple {
     -number price
     -number quantity
+
+    +increaseQuantity() void
+    +decreaseQuantity() boolean
   }
   Apple ..|> Product
 
@@ -31,6 +42,9 @@ classDiagram
   class Banana {
     -number price
     -number quantity
+
+    +increaseQuantity() void
+    +decreaseQuantity() boolean
   }
   Banana ..|> Product
 
@@ -44,6 +58,7 @@ classDiagram
 
     +addProduct(Product product) void
     +removeProduct(Product product) boolean
+    +emptyContents() void
   }
   Cart --o Product
 
@@ -59,7 +74,7 @@ classDiagram
   Receipt --o Cart
 
   note for Receipt "Class invariants:  <ul>
-    <li> cart != null
+    <li> cart.products.length > 0
     <li> total >= 0
     </ul>"
 ```

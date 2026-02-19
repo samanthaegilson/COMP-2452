@@ -1,9 +1,17 @@
 import type CartController from "../controller/cart-controller";
 
+/**
+ * A view to choose a {@link Product} to add to the {@link Cart}.
+ */
 export default class ChooseProductView {
     #controller: CartController;
     #dialog: HTMLDialogElement;
 
+    /**
+     * Constructs a ChooseProductView. Displays the window
+     * 
+     * @param controller the controller of the view
+     */
     constructor(controller: CartController) {
         this.#controller = controller;
 
@@ -16,9 +24,11 @@ export default class ChooseProductView {
             <button id="banana">Banana</button>
             <button id="cancel">Cancel</button>`
 
+        // Open the view of an apple
         this.#dialog.querySelector("#apple")!
             .addEventListener("click", () => this.#controller.showAppleView());
 
+        // Open the view of a banana
         this.#dialog.querySelector("#banana")!
             .addEventListener("click", () => this.#controller.showBananaView());
 
@@ -29,6 +39,9 @@ export default class ChooseProductView {
         this.#dialog.show();
     }
 
+    /**
+     * Removes the view
+     */
     #cancel() {
         this.#controller.removeViews();
         document.body.removeChild(this.#dialog);

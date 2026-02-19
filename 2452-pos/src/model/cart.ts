@@ -1,61 +1,83 @@
 import { assert } from '../assertions.ts';
-import Apple from './apple.ts';
-import Banana from './banana.ts';
 import type Listener from './listener.ts';
 import type Product from './product.ts';
 
+/**
+ * A cart. Can hold {@link Product}s.
+ */
 export default class Cart {
     #products: Array<Product>;
     #listeners: Array<Listener>;
 
+    /**
+     * Constructs a cart. Initializes the list of products
+     */
     constructor() {
         this.#products = new Array<Product>();
         this.#listeners = new Array<Listener>();
         this.#checkCart();
     }
 
+    /**
+     * Invariant properties for a cart
+     */
     #checkCart(): void {
-        // do I need this?
-        // if so i need to add the loop for every product in products
         assert(this.#products != null, "Products should never be null.");
+
+        for (const product of this.#products) {
+            assert(product != null, "Products in products should not be null.")
+        }
     }
 
-    get products() {
+    get products(): Array<Product> {
         return this.#products;
     }
 
+    /**
+     * Adds a product to the cart
+     * 
+     * @param product the product to add
+     */
     addProduct(product: Product): void {
         let found = false;
         let index = 0;
 
+        // Checks if the product is in the cart already
         while (!found && index < this.#products.length) {
             if (product.constructor === this.#products[index].constructor) {
+                // If the product is in the cart, increases the quantity
                 this.#products[index].increaseQuantity();
                 found = true;
             }
             index++;
         }
 
+        // If not in the cart, adds a new instance of the product to the cart
         if (!found) {
-            if (product instanceof Apple) {
-                this.#products.push(new Apple());
-            } else {
-                this.#products.push(new Banana());
-            }
+            this.#products.push(product);
         }
 
         this.#notifyAll();
     }
 
+    /**
+     * Removes a product from the cart
+     * 
+     * @param product the product to remove
+     * @returns if the product was removed or not
+     */
     removeProduct(product: Product): boolean {
         let removed = false;
         let found = false;
         let index = 0;
 
+        // Checks if the product is in the cart
         while (!found && index < this.#products.length) {
             if (product.constructor === this.#products[index].constructor) {
                 found = true;
+                // Decreases the quantity of the product
                 if (!this.#products[index].decreaseQuantity()) {
+                    // Removes product from the list if quantity is 0
                     this.#products.splice(index, 1);
                 }
                 removed = true;
@@ -67,10 +89,26 @@ export default class Cart {
         return removed;
     }
 
-    #notifyAll() {
+    /**
+     * Empties the products list
+     */
+    emptyContents(): void {
+        this.#products.length = 0;
+        this.#notifyAll();
+    }
+
+    /**
+     * Notifies listeners of changes
+     */
+    #notifyAll(): void {
         this.#listeners.forEach((l) => l.notify());
     }
 
+    /**
+     * Adds a listener
+     * 
+     * @param listener the listener to add
+     */
     registerListener(listener: Listener) {
         this.#listeners.push(listener);
     }
