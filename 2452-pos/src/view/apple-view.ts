@@ -42,7 +42,7 @@ export default class AppleView {
      * Adds an apple to the cart
      */
     #addApple() {
-        this.#controller.addProduct(new Apple());
+        this.#controller.addApple();
         document.body.removeChild(this.#dialog);
     }
 

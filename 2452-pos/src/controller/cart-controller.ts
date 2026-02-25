@@ -1,3 +1,5 @@
+import Apple from "../model/apple.ts";
+import Banana from "../model/banana.ts";
 import Cart from "../model/cart.ts";
 import type Product from "../model/product.ts";
 import AppleView from "../view/apple-view.ts";
@@ -64,12 +66,18 @@ export default class CartController {
     }
 
     /**
-     * Adds a product to the cart
-     * 
-     * @param product the product to add
+     * Adds an apple to the cart
      */
-    addProduct(product: Product): void {
-        this.#cart.addProduct(product);
+    addApple(): void {
+        this.#cart.addProduct(new Apple());
+        this.hideProductViews();
+    }
+
+    /**
+     * Adds a banana to the cart
+     */
+    addBanana(): void {
+        this.#cart.addProduct(new Banana());
         this.hideProductViews();
     }
 

@@ -42,7 +42,7 @@ export default class BananaView {
      * Adds a banana to the cart
      */
     #addBanana() {
-        this.#controller.addProduct(new Banana());
+        this.#controller.addBanana();
         document.body.removeChild(this.#dialog);
     }
 

@@ -70,6 +70,7 @@ classDiagram
   class Receipt {
     -Cart cart
     -number total
+    -Temporal timestamp
   }
   Receipt --o Cart
 
@@ -77,4 +78,21 @@ classDiagram
     <li> cart.products.length > 0
     <li> total >= 0
     </ul>"
+
+  class Account {
+    -number employeeNumber
+    -String name
+    -String password
+    -Array~Receipt~ receipts
+  }
+
+  class Coupon {
+    <<interface>>
+    -number discount
+  }
+
+  class BOGO {
+
+  }
+  BOGO ..|> Coupon
 ```
