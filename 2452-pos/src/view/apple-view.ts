@@ -42,7 +42,7 @@ export default class AppleView {
      * Adds an apple to the cart
      */
     #addApple() {
-        this.#controller.addProduct(new Apple());
+        this.#controller.addApple();
         document.body.removeChild(this.#dialog);
     }
 
@@ -50,7 +50,7 @@ export default class AppleView {
      * Removes an apple from the cart
      */
     #removeApple() {
-        let removed = this.#controller.removeProduct(new Apple());
+        let removed = this.#controller.removeApple();
         if (removed) {
             document.body.removeChild(this.#dialog);
         } else {

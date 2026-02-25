@@ -1,5 +1,6 @@
+import Apple from "../model/apple.ts";
+import Banana from "../model/banana.ts";
 import Cart from "../model/cart.ts";
-import type Product from "../model/product.ts";
 import AppleView from "../view/apple-view.ts";
 import BananaView from "../view/banana-view.ts";
 import CartView from "../view/cart-view.ts";
@@ -64,25 +65,43 @@ export default class CartController {
     }
 
     /**
-     * Adds a product to the cart
-     * 
-     * @param product the product to add
+     * Adds an apple to the cart
      */
-    addProduct(product: Product): void {
-        this.#cart.addProduct(product);
-        this.hideProductViews();
+    addApple(): void {
+        this.#cart.addProduct(new Apple());
+        this.#appleView = undefined;
     }
 
     /**
-     * Removes a product from the cart
-     * 
-     * @param product the product to remove
-     * @returns if the product was successfully removed or not
+     * Adds a banana to the cart
      */
-    removeProduct(product: Product): boolean {
-        let removed = this.#cart.removeProduct(product);
+    addBanana(): void {
+        this.#cart.addProduct(new Banana());
+        this.#bananaView = undefined;
+    }
+
+    /**
+     * Removes an apple from the cart
+     * 
+     * @returns if the apple was successfully removed or not
+     */
+    removeApple(): boolean {
+        let removed = this.#cart.removeProduct(new Apple());
         if (removed) {
-            this.hideProductViews();
+            this.#appleView = undefined;
+        }
+        return removed;
+    }
+
+    /**
+     * Removes a banana from the cart
+     * 
+     * @returns if the banana was successfully removed or not
+     */
+    removeBanana(): boolean {
+        let removed = this.#cart.removeProduct(new Banana());
+        if (removed) {
+            this.#bananaView = undefined;
         }
         return removed;
     }

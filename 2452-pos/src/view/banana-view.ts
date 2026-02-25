@@ -42,7 +42,7 @@ export default class BananaView {
      * Adds a banana to the cart
      */
     #addBanana() {
-        this.#controller.addProduct(new Banana());
+        this.#controller.addBanana();
         document.body.removeChild(this.#dialog);
     }
 
@@ -50,7 +50,7 @@ export default class BananaView {
      * Removes a banana from the cart
      */
     #removeBanana() {
-        let removed = this.#controller.removeProduct(new Banana());
+        let removed = this.#controller.removeBanana();
         if (removed) {
             document.body.removeChild(this.#dialog);
         } else {
