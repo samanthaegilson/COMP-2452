@@ -5,7 +5,7 @@ create table if not exists cart (
 );
 
 create table if not exists receipt (
-    cart varchar(255) not null,
+    cart integer not null,
     total integer not null,
     account varchar(255) not null,
     timestamp varchar(255) not null,
@@ -23,9 +23,10 @@ create table if not exists coupon (
     class varchar(255) not null,
     discount integer not null,
     product varchar(255) not null,
-    cart integer not null,
+    receipt integer not null,
     foreign key (product) references product(class)
-    foreign key (cart) references cart(id)
+    foreign key (receipt) references receipt(id)
+        on delete cascade
 );
 
 create table if not exists product (

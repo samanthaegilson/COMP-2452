@@ -12,6 +12,7 @@ classDiagram
     <<interface>>
     -number price
     -number quantity
+    -boolean volume
     -Cart cart
 
     +increaseQuantity() void
@@ -32,6 +33,7 @@ classDiagram
   note for Apple "Class invariants:  <ul>
     <li> price >= 0
     <li> quantity >= 0
+    <li> cart != null
     </ul>"
 
   class Banana {
@@ -48,6 +50,7 @@ classDiagram
   note for Banana "Class invariants:  <ul>
     <li> price >= 0
     <li> quantity >= 0
+    <li> cart != null
     </ul>"
 
   class Milk {
@@ -64,27 +67,24 @@ classDiagram
   note for Milk "Class invariants:  <ul>
     <li> price >= 0
     <li> quantity >= 0
+    <li> cart != null
     </ul>"
 
   class Cart {
     -~number id
     -Array~Product~ products
-    -Array~Coupon~ coupons
     -?Receipt receipt
 
     +addProduct(Product product) void
     +removeProduct(Product product) boolean
     +emptyContents() void
-    +addCoupon(Coupon coupon) void
   }
   Cart "1" o--o "*" Product
-  Cart "1" o--* "*" Coupon
 
   note for Cart "Class invariants:  <ul>
+    <li> id >= 0
     <li> products != null
     <li> loop: no products are null in products
-    <li> coupons != null
-    <li> loop: no coupons are null in coupons
     </ul>"
 
   class Receipt {
@@ -93,13 +93,22 @@ classDiagram
     -number total
     -Temporal timestamp
     -Account account
+    -Array~Coupon~ coupons
+
+    +addCoupon(Coupon coupon) void
   }
   Receipt "1" o--o "1" Cart
   Receipt "*" *--o "1" Account 
+  Receipt "1" o--* "*" Coupon
 
   note for Receipt "Class invariants:  <ul>
+    <li> id >= 0
     <li> cart.products.length > 0
     <li> total >= 0
+    <li> timestamp != null
+    <li> account != null
+    <li> coupons != null
+    <li> loop: no coupons are null in coupons
     </ul>"
 
   class Account {
@@ -148,9 +157,8 @@ classDiagram
 
 * I added an Account class to represent cashiers.
 * A added a Coupon interface and 2 children: Discount for coupons that apply to the entire purchase and BOGO for a buy-one-get-one coupon.
-* I added a timestamp and an account to the Receipt class.
-* I added a coupon array to the cart class and a method to add a coupon as well.
+* I added a timestamp, an account and a list of coupons to the Receipt class as well as method to add a coupon.
 * I added a Milk class, which is a third Product. Milk is measured in volumed instead of physical instances, so I added a boolean to the product classes to indicate if they are measured in volume or physical instances.
 * I also added a Cart property to the Product classes and a Receipt property to the Cart class to have a bidirectional relationship.
 * I added bidirectional relationships to the diagram and indicated the cardinality.
-* I added an id to the Cart and the Receipt class to have a way to reference them.
+* I added an id property to the Cart and the Receipt class to have a way to reference them.
