@@ -1,4 +1,5 @@
 import { assert } from '../assertions.ts';
+// import db from './connection.ts';
 
 /**
  * An apple. A {@link Product} that can be added to the {@link Cart}.
@@ -22,6 +23,10 @@ export default class Apple {
         assert(this.price >= 0, "Price must be at least zero.");
         assert(this.#quantity >= 0, "Quantity must be at least zero.");
     }
+
+    // static async saveApple(apple: Apple): Promise<Apple> {
+    //     let result = await db().exec("insert in");
+    // }
 
     get quantity(): number {
         return this.#quantity;
