@@ -1,4 +1,6 @@
 import { assert } from '../assertions.ts';
+import Cart from './cart.ts';
+import db from './connection.ts';
 
 /**
  * A banana. A {@link Product} that can be added to the {@link Cart}.
@@ -6,12 +8,13 @@ import { assert } from '../assertions.ts';
 export default class Banana {
     readonly price: number = 0.4;
     #quantity: number;
+    readonly volume: boolean = false;
 
     /**
      * Constructs an apple. Sets the initial quantity
      */
     constructor() {
-        this.#quantity = 1;
+        this.#quantity = 0;
         this.#checkBanana();
     }
 
@@ -23,6 +26,13 @@ export default class Banana {
         assert(this.#quantity >= 0, "Quantity must be at least zero.");
     }
 
+    static async saveBanana(banana: Banana, cart: Cart): Promise<Banana> {
+        await db().query<{ class: string }>("insert into product(class, price, quantity, volume, cart) values($1, $2, $3, $4, $5) on conflict do nothing returning class",
+            [banana.constructor.name, banana.price, banana.quantity, banana.volume, cart.id])
+
+        return banana;
+    }
+
     get quantity(): number {
         return this.#quantity;
     }
@@ -30,9 +40,9 @@ export default class Banana {
     /**
      * Increments the quantity of the banana
      */
-    increaseQuantity(): void {
+    increaseQuantity(amount: number): void {
         this.#checkBanana();
-        this.#quantity++;
+        this.#quantity += amount;
         this.#checkBanana();
     }
 
@@ -41,12 +51,12 @@ export default class Banana {
      * 
      * @returns if there was a banana to remove or not
      */
-    decreaseQuantity(): boolean {
+    decreaseQuantity(amount: number): boolean {
         this.#checkBanana();
         let decreased = false;
         // Only removes a banana if there is one available
-        if (this.#quantity > 1) {
-            this.#quantity--;
+        if (this.#quantity - amount > 0) {
+            this.#quantity -= amount;
             decreased = true;
         }
         this.#checkBanana();

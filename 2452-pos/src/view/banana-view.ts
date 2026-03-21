@@ -21,6 +21,8 @@ export default class BananaView {
         this.#dialog.innerHTML = `
             <span id="error"></span><br />
             <label for="bananaView">Banana</label>
+            <label for="amount">Amount</label>
+            <input type="number" id="amount"/>
             <button id="addBanana">Add Banana</button>
             <button id="removeBanana">Remove Banana</button>
             <button id="cancel">Cancel</button>`
@@ -42,7 +44,8 @@ export default class BananaView {
      * Adds a banana to the cart
      */
     #addBanana() {
-        this.#controller.addBanana();
+        let amount = this.#dialog.querySelector<HTMLInputElement>("input[type='number']")!.valueAsNumber;
+        this.#controller.addBanana(amount);
         document.body.removeChild(this.#dialog);
     }
 
@@ -50,7 +53,8 @@ export default class BananaView {
      * Removes a banana from the cart
      */
     #removeBanana() {
-        let removed = this.#controller.removeProduct(new Banana());
+        let amount = this.#dialog.querySelector<HTMLInputElement>("input[type='number']")!.valueAsNumber;
+        let removed = this.#controller.removeBanana(amount);
         if (removed) {
             document.body.removeChild(this.#dialog);
         } else {

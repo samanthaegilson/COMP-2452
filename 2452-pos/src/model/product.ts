@@ -4,6 +4,7 @@
 export default interface Product {
     price: number;
     quantity: number;
-    increaseQuantity(): void;
-    decreaseQuantity(): boolean;
+    volume: boolean;
+    increaseQuantity(amount: number): void;
+    decreaseQuantity(amount: number): boolean;
 }

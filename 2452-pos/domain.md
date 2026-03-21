@@ -126,30 +126,30 @@ classDiagram
 
   class Coupon {
     <<interface>>
-    -Cart cart
+    -Receipt receipt
   }
 
   class BOGO {
     -Product product
-    -Cart cart
+    -Receipt receipt
   }
   BOGO ..|> Coupon
   BOGO --o "1" Product
 
   note for BOGO "Class invariants:  <ul>
     <li> product != null
-    <li> cart != null
+    <li> receipt != null
     </ul>"
 
   class Discount {
     -number percentage
-    -Cart cart
+    -Receipt receipt
   }
   Discount ..|> Coupon
 
   note for Discount "Class invariants:  <ul>
     <li> percentage > 0
-    <li> cart != null
+    <li> receipt != null
     </ul>"
 ```
 

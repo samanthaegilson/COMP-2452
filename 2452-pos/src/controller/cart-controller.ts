@@ -1,11 +1,13 @@
+import type Account from "../model/account.ts";
 import Apple from "../model/apple.ts";
 import Banana from "../model/banana.ts";
 import Cart from "../model/cart.ts";
-import type Product from "../model/product.ts";
+import Milk from "../model/milk.ts";
 import AppleView from "../view/apple-view.ts";
 import BananaView from "../view/banana-view.ts";
 import CartView from "../view/cart-view.ts";
 import ChooseProductView from "../view/choose-product-view.ts";
+import MilkView from "../view/milk-view.ts";
 import ReceiptController from "./receipt-controller.ts";
 
 /**
@@ -13,17 +15,20 @@ import ReceiptController from "./receipt-controller.ts";
  */
 export default class CartController {
     #cart: Cart;
+    #account: Account;
     #cartView: CartView;
     #chooseProductView?: ChooseProductView;
     #appleView?: AppleView;
     #bananaView?: BananaView;
+    #milkView?: MilkView;
     #receiptController?: ReceiptController;
 
     /**
      * Constructs a CartController. Initializes the cart and cart view
      */
-    constructor() {
+    constructor(account: Account) {
         this.#cart = new Cart();
+        this.#account = account;
         this.#cartView = new CartView(this.#cart, this);
     }
 
@@ -31,10 +36,9 @@ export default class CartController {
      * Creates a new ReceiptController to show the receipt
      */
     showReceiptView(): void {
-        if (this.#receiptController == undefined
-            || this.#receiptController.receiptView == undefined) {
-            this.#receiptController = new ReceiptController(this.#cart);
-            this.#cart.emptyContents();
+        if (this.#receiptController == undefined) {
+            this.#receiptController = new ReceiptController(this.#cart, this.#account);
+            // this.#cart.emptyContents(); // will mess up receipt
         }
     }
 
@@ -66,32 +70,89 @@ export default class CartController {
     }
 
     /**
-     * Adds an apple to the cart
+     * Displays the window to add milk from
      */
-    addApple(): void {
-        this.#cart.addProduct(new Apple());
-        this.hideProductViews();
+    showMilkView(): void {
+        if (this.#milkView == undefined) {
+            this.#milkView = new MilkView(this);
+        }
+    }
+
+    /**
+     * Adds an apple to the cart
+     * 
+     * @param amount the amount of apples to remove
+     */
+    addApple(amount: number): void {
+        this.#cart.addProduct(new Apple(), amount);
+        this.#appleView = undefined;
+        Cart.saveCart(this.#cart);
     }
 
     /**
      * Adds a banana to the cart
+     * 
+     * @param amount the amount of bananas to remove
      */
-    addBanana(): void {
-        this.#cart.addProduct(new Banana());
-        this.hideProductViews();
+    addBanana(amount: number): void {
+        this.#cart.addProduct(new Banana(), amount);
+        this.#bananaView = undefined;
+        Cart.saveCart(this.#cart);
     }
 
     /**
-     * Removes a product from the cart
+     * Adds milk to the cart
      * 
-     * @param product the product to remove
-     * @returns if the product was successfully removed or not
+     * @param amount the amount of milk to remove
      */
-    removeProduct(product: Product): boolean {
-        let removed = this.#cart.removeProduct(product);
+    addMilk(amount: number): void {
+        this.#cart.addProduct(new Milk(), amount);
+        this.#milkView = undefined;
+        Cart.saveCart(this.#cart);
+    }
+
+    /**
+     * Removes an apple from the cart
+     * 
+     * @param amount the amount of apples to remove
+     * @returns if the apple was successfully removed or not
+     */
+    removeApple(amount: number): boolean {
+        let removed = this.#cart.removeProduct(new Apple(), amount);
         if (removed) {
-            this.hideProductViews();
+            this.#appleView = undefined;
         }
+        Cart.saveCart(this.#cart);
+        return removed;
+    }
+
+    /**
+     * Removes a banana from the cart
+     * 
+     * @param amount the amount of bananas to remove
+     * @returns if the banana was successfully removed or not
+     */
+    removeBanana(amount: number): boolean {
+        let removed = this.#cart.removeProduct(new Banana(), amount);
+        if (removed) {
+            this.#bananaView = undefined;
+        }
+        Cart.saveCart(this.#cart);
+        return removed;
+    }
+
+    /**
+     * Removes a milk from the cart
+     * 
+     * @param amount the amount of milk to remove
+     * @returns if the milk was successfully removed or not
+     */
+    removeMilk(amount: number) {
+        let removed = this.#cart.removeProduct(new Milk(), amount);
+        if (removed) {
+            this.#milkView = undefined;
+        }
+        Cart.saveCart(this.#cart);
         return removed;
     }
 

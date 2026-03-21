@@ -22,6 +22,7 @@ export default class ChooseProductView {
             <label for="productOptions">Product Options</label>
             <button id="apple">Apple</button>
             <button id="banana">Banana</button>
+            <button id="milk">Milk</button>
             <button id="cancel">Cancel</button>`
 
         // Open the view of an apple
@@ -31,6 +32,10 @@ export default class ChooseProductView {
         // Open the view of a banana
         this.#dialog.querySelector("#banana")!
             .addEventListener("click", () => this.#controller.showBananaView());
+
+        // Open the view of milk
+        this.#dialog.querySelector("#milk")!
+            .addEventListener("click", () => this.#controller.showMilkView());
 
         this.#dialog.querySelector("#cancel")!
             .addEventListener("click", () => this.#cancel());

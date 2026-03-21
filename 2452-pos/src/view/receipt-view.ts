@@ -53,7 +53,7 @@ export default class ReceiptView {
      * Removes the view
      */
     #done() {
-        this.#controller.removeView();
+        this.#controller.hideReceiptView();
         document.body.removeChild(this.#dialog);
     }
 }

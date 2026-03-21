@@ -21,6 +21,8 @@ export default class AppleView {
         this.#dialog.innerHTML = `
             <span id="error"></span><br />
             <label for="appleView">Apple</label>
+            <label for="amount">Amount</label>
+            <input type="number" id="amount"/>
             <button id="addApple">Add Apple</button>
             <button id="removeApple">Remove Apple</button>
             <button id="cancel">Cancel</button>`
@@ -42,7 +44,9 @@ export default class AppleView {
      * Adds an apple to the cart
      */
     #addApple() {
-        this.#controller.addApple();
+        let amount = this.#dialog.querySelector<HTMLInputElement>("input[type='number']")!.valueAsNumber;
+        console.log(amount);
+        this.#controller.addApple(amount);
         document.body.removeChild(this.#dialog);
     }
 
@@ -50,7 +54,8 @@ export default class AppleView {
      * Removes an apple from the cart
      */
     #removeApple() {
-        let removed = this.#controller.removeProduct(new Apple());
+        let amount = this.#dialog.querySelector<HTMLInputElement>("input[type='number']")!.valueAsNumber;
+        let removed = this.#controller.removeApple(amount);
         if (removed) {
             document.body.removeChild(this.#dialog);
         } else {

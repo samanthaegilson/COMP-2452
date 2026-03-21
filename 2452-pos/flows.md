@@ -52,15 +52,13 @@ flowchart
     cart[[View cart]]
 
     signIn ==no account==> credentials
-    credentials ==username==> createAccount
-    credentials ==password==> createAccount
+    credentials ==username, password==> createAccount
     createAccount -.username already exists.-> credentials
     createAccount -.account created.-> cart
 
     signIn ==have an account==> login
     login ==make new account==> credentials
-    login ==username==> checkUser
-    login ==password==> checkUser
+    login ==username, password==> checkUser
     checkUser -.no such user.-> login
     checkUser -.credentials match account.-> cart
   end
@@ -79,7 +77,7 @@ flowchart
     bogo{Apply BOGO}
     applied[[Coupon applied]]
 
-    cart ==apply coupon==> type
+    cart ==check out==> type
     type -.go back.-> cart
 
     type ==discount==> percentage
