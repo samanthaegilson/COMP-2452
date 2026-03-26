@@ -52,12 +52,13 @@ flowchart
     cart[[View cart]]
 
     signIn ==no account==> credentials
+    credentials -.go back.-> signIn
     credentials ==username, password==> createAccount
     createAccount -.username already exists.-> credentials
     createAccount -.account created.-> cart
 
     signIn ==have an account==> login
-    login ==make new account==> credentials
+    login -.go back.-> signIn
     login ==username, password==> checkUser
     checkUser -.no such user.-> login
     checkUser -.credentials match account.-> cart
@@ -93,3 +94,6 @@ flowchart
     bogo -.BOGO applied.-> applied
   end
 ```
+
+# Changes of flows from phase 2 design
+* I added an option to go back from choosing to login or creating a new account
