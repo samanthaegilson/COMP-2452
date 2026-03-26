@@ -45,9 +45,14 @@ export default class AppleView {
      */
     #addApple() {
         let amount = this.#dialog.querySelector<HTMLInputElement>("input[type='number']")!.valueAsNumber;
-        console.log(amount);
-        this.#controller.addApple(amount);
-        document.body.removeChild(this.#dialog);
+        // Checks the number is a valid integer
+        if (Number.isInteger(amount) && amount > 0) {
+            this.#controller.addApple(amount);
+            document.body.removeChild(this.#dialog);
+        } else {
+            this.#dialog.querySelector("#error")!
+                .textContent = "Amount to add must be a positive whole number, e.g. 2.";
+        }
     }
 
     /**
@@ -55,13 +60,19 @@ export default class AppleView {
      */
     #removeApple() {
         let amount = this.#dialog.querySelector<HTMLInputElement>("input[type='number']")!.valueAsNumber;
-        let removed = this.#controller.removeApple(amount);
-        if (removed) {
-            document.body.removeChild(this.#dialog);
+        // Checks the number is a valid integer
+        if (Number.isInteger(amount) && amount > 0) {
+            let removed = this.#controller.removeApple(amount);
+            if (removed) {
+                document.body.removeChild(this.#dialog);
+            } else {
+                // Displays an error if the apple quantity was 0
+                this.#dialog.querySelector("#error")!
+                    .textContent = "Cannot remove a product with a quantity of 0.";
+            }
         } else {
-            // Displays an error if the apple quantity was 0
             this.#dialog.querySelector("#error")!
-                .textContent = "Cannot remove a product with a quantity of 0.";
+                .textContent = "Amount to remove must be a positive whole number, e.g. 2.";
         }
     }
 

@@ -1,9 +1,17 @@
 import type ReceiptController from "../controller/receipt-controller";
 
+/**
+ * A view for a {@link BOGO}.
+ */
 export default class BOGOView {
     #controller: ReceiptController;
     #dialog: HTMLDialogElement;
 
+    /**
+     * Constructs a BOGOView. Displays the window
+     * 
+     * @param controller the controller of the view
+     */
     constructor(controller: ReceiptController) {
         this.#controller = controller;
 
@@ -33,6 +41,9 @@ export default class BOGOView {
         this.#dialog.show();
     }
 
+    /**
+     * Adds an apple as the BOGO product
+     */
     #apple() {
         if (this.#controller.bogoApple()) {
             this.#controller.hideBOGOView();
@@ -45,6 +56,9 @@ export default class BOGOView {
         }
     }
 
+    /**
+     * Adds a banana as the BOGO product
+     */
     #banana() {
         if (this.#controller.bogoBanana()) {
             this.#controller.hideBOGOView();
@@ -57,6 +71,9 @@ export default class BOGOView {
         }
     }
 
+    /**
+     * Adds a milk as the BOGO product
+     */
     #milk() {
         if (this.#controller.bogoMilk()) {
             document.body.removeChild(this.#dialog);
@@ -68,6 +85,9 @@ export default class BOGOView {
         }
     }
 
+    /**
+     * Removes the view
+     */
     #cancel() {
         this.#controller.hideBOGOView();
         document.body.removeChild(this.#dialog);

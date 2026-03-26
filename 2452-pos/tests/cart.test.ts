@@ -2,6 +2,7 @@ import { expect, test } from 'vitest';
 import Apple from "../src/model/apple.ts";
 import Banana from "../src/model/banana.ts";
 import Cart from "../src/model/cart.ts";
+import Milk from '../src/model/milk.ts';
 
 test('Can add product to cart', () => {
     let apple = new Apple();
@@ -33,16 +34,6 @@ test('Can remove product with a higher quantity from cart', () => {
     expect(cart.products).contains(banana);
 });
 
-test('Can empty contents of cart', () => {
-    let apple = new Apple();
-    let cart = new Cart();
-
-    cart.addProduct(apple, 1);
-    cart.emptyContents();
-
-    expect(cart.products).toHaveLength(0);
-});
-
 test('Cart notifies listeners', () => {
     let apple = new Apple();
     let cart = new Cart();
@@ -54,4 +45,24 @@ test('Cart notifies listeners', () => {
     cart.addProduct(apple, 1);
 
     expect(notified).equals(true);
+});
+
+test('Can save cart', () => {
+    let cart = new Cart();
+    let apple = new Apple();
+    let banana = new Banana();
+    let milk = new Milk();
+
+    cart.addProduct(apple, 1);
+    cart.addProduct(banana, 2);
+    cart.addProduct(milk, 3);
+
+    Cart.saveCart(cart);
+
+    if (cart.id) {
+        let promise = Cart.getCartById(cart.id);
+        promise.then((retrieved) => {
+            expect(retrieved).equals(cart);
+        })
+    }
 });

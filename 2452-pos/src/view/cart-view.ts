@@ -1,4 +1,5 @@
 import type CartController from "../controller/cart-controller";
+import type Account from "../model/account";
 import type Cart from "../model/cart";
 import { InvalidEmptyCartException } from "../model/receipt";
 
@@ -13,16 +14,17 @@ export default class CartView {
     /**
      * Constructs a CartView. Displays the page
      * 
-     * @param cart the cart of the view
+     * @param account the account of the cart of the view
      * @param controller the controller of the view
      */
-    constructor(cart: Cart, controller: CartController) {
-        this.#cart = cart;
+    constructor(account: Account, controller: CartController) {
+        this.#cart = account.cart;
         this.#controller = controller;
         this.#cart.registerListener(this);
 
         document.querySelector("#app")!.innerHTML =
             `<div id='cart'>
+                <span id="cashier"></span><br />
                 <button id="browse-products">Browse Products</button>
                 <button id="check-out">Check Out</button>
                 <span id="error"></span><br />
@@ -31,6 +33,9 @@ export default class CartView {
 
         this.#productsEL = document.querySelector("#cart > ul")!;
 
+        document.querySelector("#cashier")!.textContent = "Cashier: "
+            + account.username;
+
         // Open the view to choose a product
         document.querySelector("#browse-products")!
             .addEventListener("click", () => this.#showChooseProduct())
@@ -38,6 +43,8 @@ export default class CartView {
         // Open the view of the receipt
         document.querySelector("#check-out")!
             .addEventListener("click", () => this.#showReceipt())
+
+        this.notify(); // Make sure list is updated
     }
 
     /**
@@ -54,6 +61,7 @@ export default class CartView {
      * Opens the receipt view
      */
     #showReceipt() {
+        // this.#controller.showReceiptView();
         try {
             this.#controller.showReceiptView();
         } catch (e: any) {
@@ -77,8 +85,13 @@ export default class CartView {
         // Replaces the contents of the list
         this.#cart.products.forEach((p) => {
             let prodEl = document.createElement("li");
-            prodEl.innerHTML = `<strong>${p.constructor.name + " x"
-                + p.quantity}</strong>`;
+            if (p.volume) {
+                prodEl.innerHTML = `<strong>${p.constructor.name + " "
+                    + p.quantity + "L"}</strong>`;
+            } else {
+                prodEl.innerHTML = `<strong>${p.constructor.name + " x"
+                    + p.quantity}</strong>`;
+            }
             this.#productsEL.appendChild(prodEl);
         })
     }

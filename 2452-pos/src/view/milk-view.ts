@@ -1,14 +1,17 @@
 import type CartController from "../controller/cart-controller";
 
+/**
+ * A view for a {@link Milk}.
+ */
 export default class MilkView {
     #controller: CartController;
     #dialog: HTMLDialogElement;
 
     /**
-         * Constructs an AppleView. Displays the window
-         * 
-         * @param controller the controller of the view
-         */
+     * Constructs a MilkView. Displays the window
+     * 
+     * @param controller the controller of the view
+     */
     constructor(controller: CartController) {
         this.#controller = controller;
 
@@ -36,22 +39,39 @@ export default class MilkView {
         this.#dialog.show();
     }
 
+    /**
+     * Adds a milk to the cart
+     */
     #addMilk() {
-        // CHECK AMOUNT IS POSITIVE
         let amount = this.#dialog.querySelector<HTMLInputElement>("input[type='number']")!.valueAsNumber;
-        this.#controller.addMilk(amount);
-        document.body.removeChild(this.#dialog);
-    }
-
-    #removeMilk() {
-        let amount = this.#dialog.querySelector<HTMLInputElement>("input[type='number']")!.valueAsNumber;
-        let removed = this.#controller.removeMilk(amount);
-        if (removed) {
+        // Checks the number is a valid integer
+        if (Number.isInteger(amount) && amount > 0) {
+            this.#controller.addMilk(amount);
             document.body.removeChild(this.#dialog);
         } else {
-            // Displays an error if the milk quantity was 0
             this.#dialog.querySelector("#error")!
-                .textContent = "Cannot remove a product with a quantity of 0.";
+                .textContent = "Amount to add must be a positive whole number, e.g. 2.";
+        }
+    }
+
+    /**
+     * Removes a milk from the cart
+     */
+    #removeMilk() {
+        let amount = this.#dialog.querySelector<HTMLInputElement>("input[type='number']")!.valueAsNumber;
+        // Checks the number is a valid integer
+        if (Number.isInteger(amount) && amount > 0) {
+            let removed = this.#controller.removeMilk(amount);
+            if (removed) {
+                document.body.removeChild(this.#dialog);
+            } else {
+                // Displays an error if the milk quantity was 0
+                this.#dialog.querySelector("#error")!
+                    .textContent = "Cannot remove a product with a quantity of 0.";
+            }
+        } else {
+            this.#dialog.querySelector("#error")!
+                .textContent = "Amount to remove must be a positive whole number, e.g. 2.";
         }
     }
 

@@ -1,9 +1,17 @@
 import type AccountController from "../controller/account-controller";
 
+/**
+ * A view to sign in to an existing {@link Account}.
+ */
 export default class LoginView {
     #controller: AccountController;
     #dialog: HTMLDialogElement;
 
+    /**
+     * Constructor for LoginView. Displays the window
+     * 
+     * @param controller the controller of the view
+     */
     constructor(controller: AccountController) {
         this.#controller = controller;
 
@@ -22,32 +30,36 @@ export default class LoginView {
             .addEventListener("click", () => this.#login());
 
         this.#dialog.querySelector("#cancel")!
-            .addEventListener("click", () => this.#cancel());
+            .addEventListener("click", () => this.cancel());
 
         document.body.appendChild(this.#dialog);
         this.#dialog.show();
     }
 
+    /**
+     * Logs into an account
+     */
     #login() {
         let username = this.#dialog.querySelector<HTMLInputElement>("#username")!.value;
         let password = this.#dialog.querySelector<HTMLInputElement>("#password")!.value;
 
-        if (this.#controller.checkUser(username, password)) {
-            this.#controller.hideLoginView();
-            document.body.removeChild(this.#dialog);
-        } else {
-            // Displays an error if an account with that username already exists
-            this.#dialog.querySelector("#error")!
-                .textContent = "No account with this username and password "
-                + " exist. Please try entering again.";
-        }
+        this.#controller.checkUser(username, password);
+    }
+
+    /**
+     * Displays an error if no account with that username and password exists
+     */
+    noMatchingAccount() {
+        this.#dialog.querySelector("#error")!
+            .textContent = "No account with this username and password "
+            + " exist. Please try entering again.";
     }
 
     /**
      * Removes the view
      */
-    #cancel() {
-        this.#controller.hideCreateAccountView();
+    cancel() {
+        this.#controller.hideLoginView();
         document.body.removeChild(this.#dialog);
     }
 }

@@ -1,4 +1,4 @@
-import type Account from "../model/account.ts";
+import Account from "../model/account.ts";
 import Apple from "../model/apple.ts";
 import Banana from "../model/banana.ts";
 import Cart from "../model/cart.ts";
@@ -21,25 +21,25 @@ export default class CartController {
     #appleView?: AppleView;
     #bananaView?: BananaView;
     #milkView?: MilkView;
-    #receiptController?: ReceiptController;
 
     /**
      * Constructs a CartController. Initializes the cart and cart view
      */
     constructor(account: Account) {
-        this.#cart = new Cart();
         this.#account = account;
-        this.#cartView = new CartView(this.#cart, this);
+        this.#cart = account.cart;
+        this.#cartView = new CartView(this.#account, this);
     }
 
     /**
      * Creates a new ReceiptController to show the receipt
      */
     showReceiptView(): void {
-        if (this.#receiptController == undefined) {
-            this.#receiptController = new ReceiptController(this.#cart, this.#account);
-            // this.#cart.emptyContents(); // will mess up receipt
-        }
+        new ReceiptController(this.#cart, this.#account);
+        this.#account.cart = new Cart();
+        this.#cart = this.#account.cart;
+        this.#cartView = new CartView(this.#account, this);
+        Account.updateCart(this.#account);
     }
 
     /**

@@ -34,9 +34,47 @@ export default class Cart {
         }
     }
 
+    /**
+     * Loads a cart with a specific id from the database
+     * 
+     * @param cartId the cart id of the cart to find
+     * @returns the cart with the id
+     */
+    static async getCartById(cartId: number): Promise<Cart> {
+        let cart = new Cart();
+        cart.id = cartId;
+
+        // Loads each product
+        let apples = await Apple.getAppleForCart(cart);
+        let bananas = await Banana.getBananaForCart(cart);
+        let milks = await Milk.getMilkForCart(cart);
+
+        for (let apple of apples) {
+            cart.products.push(apple);
+        }
+
+        for (let banana of bananas) {
+            cart.products.push(banana);
+        }
+
+        for (let milk of milks) {
+            cart.products.push(milk);
+        }
+
+        return cart;
+    }
+
+    /**
+     * Saves a cart to the database
+     * 
+     * @param cart the cart to save
+     * @returns the cart
+     */
     static async saveCart(cart: Cart): Promise<Cart> {
         if (!cart.id) {
-            let results = await db().query<{ id: number }>("insert into cart(id) values(default) returning id")
+            // Only saves the cart if it is not already in the database 
+            let results = await db().query<{ id: number }>
+                ("insert into cart(id) values(default) returning id")
 
             results.rows.forEach((row) => {
                 cart.id = row['id']
@@ -44,6 +82,7 @@ export default class Cart {
             })
         }
 
+        // Saves all the products of the cart
         cart.products.forEach((product) => {
             if (product instanceof Apple) {
                 Apple.saveApple(product, cart);
@@ -57,20 +96,18 @@ export default class Cart {
         return cart;
     }
 
-    static async getCartsForReceipt(receiptId: number): Promise<Array<Cart>> {
-        let results = await db()
-            .query<{ id: number }>("select id from cart where receipt = $1",
-                [receiptId])
+    /**
+     * Deletes a product from the database
+     * 
+     * @param product the product to delete 
+     * @returns the product
+     */
+    static async deleteProduct(product: Product): Promise<Product> {
+        // Deletes a product from the database
+        await db().query<{ id: number }>("delete from product where id = $1",
+            [product.id])
 
-        let allCarts = new Array<Cart>();
-
-        results.rows.forEach((row) => {
-            let cart = new Cart();
-            // GET PRODUCTS
-
-            allCarts.push(cart);
-        })
-        return allCarts;
+        return product;
     }
 
     get products(): Array<Product> {
@@ -81,6 +118,7 @@ export default class Cart {
      * Adds a product to the cart
      * 
      * @param product the product to add
+     * @param amount the amount of the product to add
      */
     addProduct(product: Product, amount: number): void {
         this.#checkCart();
@@ -111,6 +149,7 @@ export default class Cart {
      * Removes a product from the cart
      * 
      * @param product the product to remove
+     * @param amount the amount of the product to remove
      * @returns if the product was removed or not
      */
     removeProduct(product: Product, amount: number): boolean {
@@ -124,11 +163,15 @@ export default class Cart {
             if (product.constructor === this.#products[index].constructor) {
                 found = true;
                 // Decreases the quantity of the product
-                if (!this.#products[index].decreaseQuantity(amount)) {
-                    // Removes product from the list if quantity is 0
+                if (this.#products[index].decreaseQuantity(amount)) {
+                    removed = true;
+                }
+
+                // Removes product from the list if quantity is 0
+                if (this.#products[index].quantity == 0) {
+                    Cart.deleteProduct(this.#products[index]);
                     this.#products.splice(index, 1);
                 }
-                removed = true;
             }
             index++;
         }
@@ -136,16 +179,6 @@ export default class Cart {
         this.#notifyAll();
         this.#checkCart();
         return removed;
-    }
-
-    /**
-     * Empties the products list
-     */
-    emptyContents(): void {
-        this.#checkCart();
-        this.#products.length = 0;
-        this.#notifyAll();
-        this.#checkCart();
     }
 
     /**

@@ -10,76 +10,72 @@ date: Winter 2026
 classDiagram
   class Product {
     <<interface>>
+    -~number id
     -number price
     -number quantity
     -boolean volume
-    -Cart cart
 
-    +increaseQuantity() void
-    +decreaseQuantity() boolean
+    +increaseQuantity(number amount) void
+    +decreaseQuantity(number amount) boolean
   }
 
   class Apple {
+    -~number id
     -number price
     -number quantity
     -boolean volume
-    -Cart cart
 
-    +increaseQuantity() void
-    +decreaseQuantity() boolean
+    +increaseQuantity(number amount) void
+    +decreaseQuantity(number amount) boolean
   }
   Apple ..|> Product
 
   note for Apple "Class invariants:  <ul>
     <li> price >= 0
     <li> quantity >= 0
-    <li> cart != null
     </ul>"
 
   class Banana {
+    -~number id
     -number price
     -number quantity
     -boolean volume
-    -Cart cart
 
-    +increaseQuantity() void
-    +decreaseQuantity() boolean
+    +increaseQuantity(number amount) void
+    +decreaseQuantity(number amount) boolean
   }
   Banana ..|> Product
 
   note for Banana "Class invariants:  <ul>
     <li> price >= 0
     <li> quantity >= 0
-    <li> cart != null
     </ul>"
 
   class Milk {
+    -~number id
     -number price
     -number quantity
     -boolean volume
-    -Cart cart
 
-    +increaseQuantity() void
-    +decreaseQuantity() boolean
+    +increaseQuantity(number amount) void
+    +decreaseQuantity(number amount) boolean
   }
   Milk ..|> Product
 
   note for Milk "Class invariants:  <ul>
     <li> price >= 0
     <li> quantity >= 0
-    <li> cart != null
     </ul>"
 
   class Cart {
     -~number id
     -Array~Product~ products
-    -?Receipt receipt
 
     +addProduct(Product product) void
     +removeProduct(Product product) boolean
-    +emptyContents() void
   }
   Cart "1" o--o "*" Product
+  Cart "1" o--o "1" Account
 
   note for Cart "Class invariants:  <ul>
     <li> id >= 0
@@ -91,11 +87,12 @@ classDiagram
     -~number id
     -Cart cart
     -number total
-    -Temporal timestamp
+    -Temporal.PlainDateTime timestamp
     -Account account
     -Array~Coupon~ coupons
 
-    +addCoupon(Coupon coupon) void
+    +applyBOGO(BOGO bogo) boolean
+    +applyDiscount(Discount discount) void
   }
   Receipt "1" o--o "1" Cart
   Receipt "*" *--o "1" Account 
@@ -115,21 +112,27 @@ classDiagram
     -~String username
     -String password
     -Array~Receipt~ receipts
+    -Cart cart
+
+    +addReceipt(Receipt receipt) void
   }
 
   note for Account "Class invariants:  <ul>
     <li> username.length() > 0
     <li> password.length() > 0
     <li> receipts != null
+    <li> cart != null
     <li> loop: no receipts are null in receipts
     </ul>"
 
   class Coupon {
     <<interface>>
+    -~number id
     -Receipt receipt
   }
 
   class BOGO {
+    -~number id
     -Product product
     -Receipt receipt
   }
@@ -142,16 +145,26 @@ classDiagram
     </ul>"
 
   class Discount {
+    -~number id
     -number percentage
     -Receipt receipt
   }
   Discount ..|> Coupon
 
   note for Discount "Class invariants:  <ul>
-    <li> percentage > 0
+    <li> percentage > 0 && percentage <= 100
     <li> receipt != null
     </ul>"
 ```
+
+# Changes since phase 2 design
+* I added ids to the Product classes and to the Coupon classes to identify them in the database.
+* I added an amount parameter to the Product increaseQuantity and decreaseQuantity methods.
+* I removed the emptyContents method from Cart since I did not use it anymore.
+* I added a cart to Account to be able to persist.
+* I removed the cart property from the Product classes.
+* I added an addReceipt method to the Account class.
+* I changed the addCoupon method in the Receipt class to an applyBOGO and a applyDiscount method.
 
 # Changes since phase 1
 

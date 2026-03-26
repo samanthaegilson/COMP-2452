@@ -26,6 +26,8 @@ export default class ReceiptView {
             <label for="receipt">Receipt</label>
             <ul></ul>
             <span id="total"></span><br />
+            <span id="timestamp"></span><br />
+            <span id="account"></span><br />
             <button id="done">Done</button>`
 
         this.#cartEL = this.#dialog.querySelector("#receipt-dialog > ul")!;
@@ -33,14 +35,29 @@ export default class ReceiptView {
         // Adds each product of the cart to the list
         this.#receipt.cart.products.forEach((p) => {
             let prodEl = document.createElement("li");
-            prodEl.innerHTML = `<strong>${"x" + p.quantity + " "
-                + p.constructor.name + "\t$" + (p.price * p.quantity)}</strong>`;
+            if (p.volume) {
+                prodEl.innerHTML = `<strong>${p.quantity + "L "
+                    + p.constructor.name + "\t$"
+                    + (p.price * p.quantity)}</strong>`;
+            } else {
+                prodEl.innerHTML = `<strong>${"x" + p.quantity + " "
+                    + p.constructor.name + "\t$"
+                    + (p.price * p.quantity)}</strong>`;
+            }
             this.#cartEL.appendChild(prodEl);
         })
 
         // Adds the total to the display
         this.#dialog.querySelector("#total")!.textContent = "Total: $"
             + this.#receipt.total;
+
+        // Adds the timestamp to the display
+        this.#dialog.querySelector("#timestamp")!.textContent = ""
+            + this.#receipt.timestamp.toString();
+
+        // Adds the account name to the display
+        this.#dialog.querySelector("#account")!.textContent = "Cashier: "
+            + this.#receipt.account.username;
 
         this.#dialog.querySelector("#done")!
             .addEventListener("click", () => this.#done());

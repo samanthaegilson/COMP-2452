@@ -7,6 +7,7 @@ import type Product from './product.ts';
  * An apple. A {@link Product} that can be added to the {@link Cart}.
  */
 export default class Apple {
+    id?: number;
     readonly price: number = 1.5;
     #quantity: number;
     readonly volume: boolean = false;
@@ -27,28 +28,58 @@ export default class Apple {
         assert(this.#quantity >= 0, "Quantity must be at least zero.");
     }
 
-    static async getAllApples(): Promise<Array<Apple>> {
+    /**
+     * Loads the apples from the database in a specific cart
+     * 
+     * @param cart the cart of the apples
+     * @returns the apples in the cart
+     */
+    static async getAppleForCart(cart: Cart): Promise<Array<Apple>> {
         const allApples = new Array<Apple>();
 
         let results = await db().query<
             {
+                id: number,
                 quantity: number,
                 cart: number
             }
-        >("select quantity, cart from product where class = apple");
+        >("select id, quantity, cart from product where class = 'Apple' and cart = $1",
+            [cart.id]);
 
+        // Sets the properties of every apple
         for (let row of results.rows) {
             let apple = new Apple();
-            // set quantity
+            apple.id = row.id;
+            apple.increaseQuantity(row.quantity);
             allApples.push(apple);
         }
 
         return allApples;
     }
 
-    static async saveApple(apple: Apple, cart: Cart): Promise<Product> {
-        await db().query<{ class: string }>("insert into product(class, price, quantity, volume, cart) values($1, $2, $3, $4, $5) on conflict do nothing returning class",
-            [apple.constructor.name, apple.price, apple.quantity, apple.volume, cart.id])
+    /**
+     * Saves the apple to the database
+     * 
+     * @param apple the apple to save
+     * @param cart the cart holding the apple
+     * @returns the apple
+     */
+    static async saveApple(apple: Apple, cart: Cart): Promise<Apple> {
+        if (!apple.id) {
+            // Inserts the apple if not already in the database
+            let results = await db().query<{ id: number }>
+                ("insert into product(id, class, price, quantity, volume, cart) values(default, $1, $2, $3, $4, $5) on conflict do nothing returning id",
+                    [apple.constructor.name, apple.price, apple.quantity, apple.volume, cart.id])
+
+            results.rows.forEach((row) => {
+                apple.id = row['id']
+                console.log(`apple got ID ${apple.id}`)
+            })
+        } else {
+            // Updates the quantity if the apple is already in the database
+            await db().query<{ class: string }>("update product set quantity = ($1) where id = ($2)",
+                [apple.quantity, apple.id])
+        }
 
         return apple;
     }
@@ -58,7 +89,9 @@ export default class Apple {
     }
 
     /**
-     * Increments the quantity of the apple
+     * Increases the quantity of the apple
+     * 
+     * @param amount the amount to increase by
      */
     increaseQuantity(amount: number): void {
         this.#checkApple();
@@ -67,15 +100,16 @@ export default class Apple {
     }
 
     /**
-     * Decrements the quantity of the apple
+     * Decreases the quantity of the apple
      * 
-     * @returns if there was an apple to remove or not
+     * @param amount the amount to decrease by
+     * @returns if there was enough apples to remove or not
      */
     decreaseQuantity(amount: number): boolean {
         this.#checkApple();
         let decreased = false;
-        // Only removes an apple if there is one available
-        if (this.#quantity - amount > 0) {
+        // Only removes the apples if there is enough available
+        if (this.#quantity - amount >= 0) {
             this.#quantity -= amount;
             decreased = true;
         }

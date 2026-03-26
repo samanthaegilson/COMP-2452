@@ -6,13 +6,13 @@ test('Can increase banana quantity', () => {
 
     banana.increaseQuantity(1);
 
-    expect(banana.quantity).equals(2);
+    expect(banana.quantity).equals(1);
 });
 
 test('Can decrease banana quantity', () => {
     let banana = new Banana();
 
-    banana.increaseQuantity(1);
+    banana.increaseQuantity(2);
     banana.decreaseQuantity(1);
 
     expect(banana.quantity).equals(1);
