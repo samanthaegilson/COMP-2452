@@ -11,6 +11,7 @@ classDiagram
   class Product {
     <<interface>>
     -~number id
+    -string type
     -number price
     -number quantity
     -boolean volume
@@ -21,6 +22,7 @@ classDiagram
 
   class Apple {
     -~number id
+    -string type
     -number price
     -number quantity
     -boolean volume
@@ -31,12 +33,14 @@ classDiagram
   Apple ..|> Product
 
   note for Apple "Class invariants:  <ul>
+    <li> type.length() > 0
     <li> price >= 0
     <li> quantity >= 0
     </ul>"
 
   class Banana {
     -~number id
+    -string type
     -number price
     -number quantity
     -boolean volume
@@ -47,12 +51,14 @@ classDiagram
   Banana ..|> Product
 
   note for Banana "Class invariants:  <ul>
+    <li> type.length() > 0
     <li> price >= 0
     <li> quantity >= 0
     </ul>"
 
   class Milk {
     -~number id
+    -string type
     -number price
     -number quantity
     -boolean volume
@@ -63,6 +69,7 @@ classDiagram
   Milk ..|> Product
 
   note for Milk "Class invariants:  <ul>
+    <li> type.length() > 0
     <li> price >= 0
     <li> quantity >= 0
     </ul>"
@@ -156,6 +163,9 @@ classDiagram
     <li> receipt != null
     </ul>"
 ```
+
+# Changes since phase 2
+* I added a type attribute to the Product classes for the inventory.
 
 # Changes since phase 2 design
 * I added ids to the Product classes and to the Coupon classes to identify them in the database.

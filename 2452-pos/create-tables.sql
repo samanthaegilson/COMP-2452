@@ -12,6 +12,7 @@ create table if not exists account (
 create table if not exists product (
     id serial unique not null,
     class varchar(255) not null,
+    type varchar(255) not null,
     price numeric(4, 2) not null,
     quantity integer not null,
     volume boolean not null,
@@ -38,4 +39,12 @@ create table if not exists coupon (
     receipt integer not null,
     foreign key (receipt) references receipt(id)
         on delete cascade
+);
+
+create table if not exists product_inventory (
+    class varchar(255) not null,
+    type varchar(255) not null,
+    price numeric(4, 2) not null,
+    quantity integer not null,
+    volume boolean not null
 );
