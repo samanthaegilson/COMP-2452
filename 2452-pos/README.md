@@ -25,3 +25,8 @@ And then open your web browser and go to the address printed out by Vite.
 
 * You can find my domain model in `domain.md`.
 * You can find my flow diagrams in `flows.md`.
+
+# UI Assessment
+
+The screenshots for `ui.assessment.md` can be found in the folder `screenshots`
+at the root of the project.

@@ -43,8 +43,16 @@ create table if not exists coupon (
 
 create table if not exists product_inventory (
     class varchar(255) not null,
-    type varchar(255) not null,
-    price numeric(4, 2) not null,
-    quantity integer not null,
-    volume boolean not null
+    type varchar(255) not null
 );
+
+insert into product_inventory(class, type) values ('Apple', 'Granny Smith') on conflict do nothing;
+insert into product_inventory(class, type) values ('Apple', 'Gala') on conflict do nothing;
+insert into product_inventory(class, type) values ('Apple', 'Honeycrisp') on conflict do nothing;
+insert into product_inventory(class, type) values ('Apple', 'Ambrosia') on conflict do nothing;
+insert into product_inventory(class, type) values ('Apple', 'McIntosh') on conflict do nothing;
+insert into product_inventory(class, type) values ('Banana', 'Cavendish') on conflict do nothing;
+insert into product_inventory(class, type) values ('Banana', 'Plantain') on conflict do nothing;
+insert into product_inventory(class, type) values ('Milk', 'Almond') on conflict do nothing;
+insert into product_inventory(class, type) values ('Milk', 'Whole') on conflict do nothing;
+insert into product_inventory(class, type) values ('Milk', 'Skim') on conflict do nothing;
