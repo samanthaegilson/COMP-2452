@@ -181,6 +181,21 @@ export default class Cart {
         return removed;
     }
 
+    autoShop(amount: number): void {
+        this.#checkCart();
+
+        // 1. generate random number between 0 and 1
+        // 2. iterate over row (outgoing edges) & keep a sum of the numbers
+        // 3. check if the sum is bigger than or equal to the random number, 
+        // that's the transition
+
+        // subtract price of product from total, if the total is below 0 stop, 
+        // if not, add that product to the cart
+
+        this.#notifyAll();
+        this.#checkCart();
+    }
+
     /**
      * Notifies listeners of changes
      */

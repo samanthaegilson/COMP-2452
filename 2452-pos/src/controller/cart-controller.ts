@@ -4,6 +4,7 @@ import Banana from "../model/banana.ts";
 import Cart from "../model/cart.ts";
 import Milk from "../model/milk.ts";
 import AppleView from "../view/apple-view.ts";
+import AutoShopperView from "../view/auto-shopper-view.ts";
 import BananaView from "../view/banana-view.ts";
 import CartView from "../view/cart-view.ts";
 import ChooseProductView from "../view/choose-product-view.ts";
@@ -21,6 +22,7 @@ export default class CartController {
     #appleView?: AppleView;
     #bananaView?: BananaView;
     #milkView?: MilkView;
+    #autoShopperView?: AutoShopperView;
 
     /**
      * Constructs a CartController. Initializes the cart and cart view
@@ -40,6 +42,15 @@ export default class CartController {
         this.#cart = this.#account.cart;
         this.#cartView = new CartView(this.#account, this);
         Account.updateCart(this.#account);
+    }
+
+    /**
+     * Displays the window to start the auto shopper from
+     */
+    showAutoShopper() {
+        if (this.#autoShopperView == undefined) {
+            this.#autoShopperView = new AutoShopperView(this);
+        }
     }
 
     /**
@@ -156,6 +167,11 @@ export default class CartController {
         return removed;
     }
 
+    startAutoShopper(amount: number): void {
+        this.#cart.autoShop(amount);
+        Cart.saveCart(this.#cart);
+    }
+
     /**
      * Hides all the pop up views
      */
@@ -170,5 +186,9 @@ export default class CartController {
     hideProductViews(): void {
         this.#appleView = undefined;
         this.#bananaView = undefined;
+    }
+
+    hideAutoShopperView(): void {
+        this.#autoShopperView = undefined;
     }
 }

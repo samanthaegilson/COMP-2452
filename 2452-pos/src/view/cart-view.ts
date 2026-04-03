@@ -27,6 +27,7 @@ export default class CartView {
                 <span id="cashier"></span><br />
                 <button id="browse-products">Browse Products</button>
                 <button id="check-out">Check Out</button>
+                <button id="auto-shopper">Auto Shopper</button>
                 <span id="error"></span><br />
                 <ul></ul>
             </div>`
@@ -43,6 +44,10 @@ export default class CartView {
         // Open the view of the receipt
         document.querySelector("#check-out")!
             .addEventListener("click", () => this.#showReceipt())
+
+        // Open the view of the auto shopper
+        document.querySelector("#auto-shopper")!
+            .addEventListener("click", () => this.#showAutoShopper())
 
         this.notify(); // Make sure list is updated
     }
@@ -73,6 +78,13 @@ export default class CartView {
                 console.log("unexpected error " + e);
             }
         }
+    }
+
+    /**
+     * Opens the auto shopper view
+     */
+    #showAutoShopper() {
+
     }
 
     /**
