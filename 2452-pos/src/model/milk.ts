@@ -14,6 +14,8 @@ export default class Milk {
 
     /**
      * Constructs a milk. Sets the initial quantity
+     * 
+     * @param type the type of milk
      */
     constructor(type: string) {
         this.#quantity = 0;

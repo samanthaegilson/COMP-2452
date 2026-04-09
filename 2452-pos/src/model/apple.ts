@@ -15,6 +15,8 @@ export default class Apple {
 
     /**
      * Constructs an apple. Sets the initial quantity
+     * 
+     * @param type the type of apple
      */
     constructor(type: string) {
         this.#quantity = 0;

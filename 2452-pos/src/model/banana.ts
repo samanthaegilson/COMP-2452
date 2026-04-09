@@ -14,7 +14,9 @@ export default class Banana {
     #type: string;
 
     /**
-     * Constructs an apple. Sets the initial quantity
+     * Constructs a banana. Sets the initial quantity
+     * 
+     * @param type the type of banana
      */
     constructor(type: string) {
         this.#quantity = 0;
