@@ -7,7 +7,7 @@ import Discount from '../src/model/discount.ts';
 import Receipt from "../src/model/receipt.ts";
 
 test('Can save receipt', () => {
-    let apple = new Apple();
+    let apple = new Apple("Gala");
     let account = new Account("receipt", "receipt");
     account.cart.addProduct(apple, 1);
 
@@ -35,7 +35,7 @@ test('Can save receipt', () => {
 
 test('Can apply discount', () => {
     let cart = new Cart();
-    let apple = new Apple();
+    let apple = new Apple("Gala");
     cart.addProduct(apple, 1);
     let account = new Account("applyDiscount", "password");
     let receipt = new Receipt(cart, account);
@@ -48,7 +48,7 @@ test('Can apply discount', () => {
 
 test('Can apply bogo', () => {
     let cart = new Cart();
-    let apple = new Apple();
+    let apple = new Apple("Gala");
     cart.addProduct(apple, 3);
     let account = new Account("applyBOGO", "password");
     let receipt = new Receipt(cart, account);

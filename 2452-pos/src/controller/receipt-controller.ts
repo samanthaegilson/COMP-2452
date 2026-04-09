@@ -88,28 +88,31 @@ export default class ReceiptController {
     /**
      * Applies a BOGO for an apple
      * 
+     * @param type the type of the apple
      * @returns if the BOGO was applied successfully
      */
-    bogoApple(): boolean {
-        return this.applyBOGO(new Apple());
+    bogoApple(type: string): boolean {
+        return this.applyBOGO(new Apple(type));
     }
 
     /**
      * Applies a BOGO for a banana
      * 
+     * @param type the type of the banana
      * @returns if the BOGO was applied successfully
      */
-    bogoBanana(): boolean {
-        return this.applyBOGO(new Banana());
+    bogoBanana(type: string): boolean {
+        return this.applyBOGO(new Banana(type));
     }
 
     /**
      * Applies a BOGO for a milk
      * 
+     * @param type the type of the milk
      * @returns if the BOGO was applied successfully
      */
-    bogoMilk(): boolean {
-        return this.applyBOGO(new Milk());
+    bogoMilk(type: string): boolean {
+        return this.applyBOGO(new Milk(type));
     }
 
     /**

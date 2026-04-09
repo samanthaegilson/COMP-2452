@@ -77,9 +77,11 @@ classDiagram
   class Cart {
     -~number id
     -Array~Product~ products
+    -Array~Array~number~~ model
 
     +addProduct(Product product) void
     +removeProduct(Product product) boolean
+    +autoShop(number amount) void
   }
   Cart "1" o--o "*" Product
   Cart "1" o--o "1" Account
@@ -163,6 +165,10 @@ classDiagram
     <li> receipt != null
     </ul>"
 ```
+
+# Changes since phase 3 design
+* I added a static variable model to the Cart class to represent the Markov model.
+* I added an autoShop method to the Cart class.
 
 # Changes since phase 2
 * I added a type attribute to the Product classes for the inventory.

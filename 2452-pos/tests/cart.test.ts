@@ -5,7 +5,7 @@ import Cart from "../src/model/cart.ts";
 import Milk from '../src/model/milk.ts';
 
 test('Can add product to cart', () => {
-    let apple = new Apple();
+    let apple = new Apple("Gala");
     let cart = new Cart();
 
     cart.addProduct(apple, 1);
@@ -14,7 +14,7 @@ test('Can add product to cart', () => {
 });
 
 test('Can remove single product from cart', () => {
-    let apple = new Apple();
+    let apple = new Apple("Gala");
     let cart = new Cart();
 
     cart.addProduct(apple, 1);
@@ -24,7 +24,7 @@ test('Can remove single product from cart', () => {
 });
 
 test('Can remove product with a higher quantity from cart', () => {
-    let banana = new Banana();
+    let banana = new Banana("Cavendish");
     let cart = new Cart();
 
     cart.addProduct(banana, 1);
@@ -35,7 +35,7 @@ test('Can remove product with a higher quantity from cart', () => {
 });
 
 test('Cart notifies listeners', () => {
-    let apple = new Apple();
+    let apple = new Apple("Gala");
     let cart = new Cart();
 
     let notified = false;
@@ -49,9 +49,9 @@ test('Cart notifies listeners', () => {
 
 test('Can save cart', () => {
     let cart = new Cart();
-    let apple = new Apple();
-    let banana = new Banana();
-    let milk = new Milk();
+    let apple = new Apple("Gala");
+    let banana = new Banana("Cavendish");
+    let milk = new Milk("Almond");
 
     cart.addProduct(apple, 1);
     cart.addProduct(banana, 2);

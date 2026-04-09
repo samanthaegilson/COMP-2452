@@ -35,6 +35,7 @@ create table if not exists coupon (
     id serial unique not null,
     class varchar(255) not null,
     percent integer not null,
+    product_class varchar(255) not null,
     product_type varchar(255) not null,
     receipt integer not null,
     foreign key (receipt) references receipt(id)

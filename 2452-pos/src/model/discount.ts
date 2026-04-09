@@ -73,8 +73,8 @@ export default class Discount {
      */
     static async saveDiscount(discount: Discount): Promise<Discount> {
         let results = await db().query<{ id: number }>
-            ("insert into coupon(id, class, percent, product_type, receipt) values(default, $1, $2, $3, $4) on conflict do nothing returning id",
-                [discount.constructor.name, discount.percentage, "", discount.receipt.id])
+            ("insert into coupon(id, class, percent, product_class, product_type, receipt) values(default, $1, $2, $3, $4, $5) on conflict do nothing returning id",
+                [discount.constructor.name, discount.percentage, "", "", discount.receipt.id])
 
         results.rows.forEach((row) => {
             discount.id = row['id']

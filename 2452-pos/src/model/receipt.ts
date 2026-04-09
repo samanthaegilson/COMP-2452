@@ -180,7 +180,8 @@ export default class Receipt {
 
         // Checks there are enough of the product to apply a BOGO
         while (!found && index < this.#cart.products.length) {
-            if (this.#cart.products[index].constructor.name == bogo.product.constructor.name) {
+            if (this.#cart.products[index].constructor.name == bogo.product.constructor.name
+                && this.#cart.products[index].type == bogo.product.type) {
                 found = true;
                 if (this.#cart.products[index].quantity >= 2) {
                     // Removes the prices of 1 instace/litre of the product

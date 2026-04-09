@@ -52,7 +52,6 @@ export default class Apple {
 
         // Sets the properties of every apple
         for (let row of results.rows) {
-            console.log("type: " + row.type);
             let apple = new Apple(row.type);
             apple.id = row.id;
             apple.increaseQuantity(row.quantity);

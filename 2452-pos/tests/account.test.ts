@@ -34,7 +34,7 @@ test('Can save account', () => {
 
 test('Can add receipt', () => {
     let cart = new Cart();
-    let milk = new Milk();
+    let milk = new Milk("Almond");
     cart.addProduct(milk, 1);
     let account = new Account("add", "receipt");
     let receipt = new Receipt(cart, account);

@@ -6,7 +6,7 @@ import Discount from '../src/model/discount.ts';
 import Receipt from "../src/model/receipt.ts";
 
 test('Can save discount', () => {
-    let apple = new Apple();
+    let apple = new Apple("Gala");
     let account = new Account("discount", "discount");
     account.cart.addProduct(apple, 1);
 

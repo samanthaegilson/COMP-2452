@@ -20,19 +20,28 @@ export default class BOGOView {
         this.#dialog.innerHTML = `
             <span id="error"></span><br />
             <label for="type">Choose product</label>
-            <button id="apple">Apple</button>
-            <button id="banana">Banana</button>
-            <button id="milk">Milk</button>
+            <select name="product" id="product">
+                <option value="Apple">Apple</option>
+                <option value="Banana">Banana</option>
+                <option value="Milk">Milk</option>
+            </select>
+            <select name="type" id="type">
+                <option value="Granny Smith">Granny Smith</option>
+                <option value="Gala">Gala</option>
+                <option value="Honeycrisp">Honeycrisp</option>
+                <option value="Ambrosia">Ambrosia</option>
+                <option value="McIntosh">McIntosh</option>
+                <option value="Cavendish">Cavendish</option>
+                <option value="Plantain">Plantain</option>
+                <option value="Almond">Almond</option>
+                <option value="Whole">Whole</option>
+                <option value="Skim">Skim</option>
+            </select>
+            <button id="apply">Apply</button>
             <button id="cancel">Cancel</button>`
 
-        this.#dialog.querySelector("#apple")!
-            .addEventListener("click", () => this.#apple());
-
-        this.#dialog.querySelector("#banana")!
-            .addEventListener("click", () => this.#banana());
-
-        this.#dialog.querySelector("#milk")!
-            .addEventListener("click", () => this.#milk());
+        this.#dialog.querySelector("#apply")!
+            .addEventListener("click", () => this.#apply());
 
         this.#dialog.querySelector("#cancel")!
             .addEventListener("click", () => this.#cancel());
@@ -42,17 +51,35 @@ export default class BOGOView {
     }
 
     /**
+     * Applies the BOGO to the cart
+     */
+    #apply() {
+        const APPLE = "Apple";
+        const BANANA = "Banana";
+        let productClass = this.#dialog.querySelector<HTMLSelectElement>("#product")!.value;
+        if (productClass == APPLE) {
+            this.#apple();
+        } else if (productClass == BANANA) {
+            this.#banana();
+        } else {
+            this.#milk();
+        }
+    }
+
+    /**
      * Adds an apple as the BOGO product
      */
     #apple() {
-        if (this.#controller.bogoApple()) {
+        let type = this.#dialog.querySelector<HTMLSelectElement>("#type")!.value;
+        if (this.#controller.bogoApple(type)) {
             this.#controller.hideBOGOView();
             document.body.removeChild(this.#dialog);
         } else {
             // Displays an error if there is not enough apples to add a BOGO to
             this.#dialog.querySelector("#error")!
-                .textContent = "Not enough apples in cart for a BOGO. Please "
-                + "apply BOGO to a product with a quantity of 2 or more, e.g. 3.";
+                .textContent = "Not enough of these apples in cart for a BOGO. "
+                + "Please apply BOGO to a product with a quantity of 2 or more,"
+                + " e.g. 3.";
         }
     }
 
@@ -60,14 +87,16 @@ export default class BOGOView {
      * Adds a banana as the BOGO product
      */
     #banana() {
-        if (this.#controller.bogoBanana()) {
+        let type = this.#dialog.querySelector<HTMLSelectElement>("#type")!.value;
+        if (this.#controller.bogoBanana(type)) {
             this.#controller.hideBOGOView();
             document.body.removeChild(this.#dialog);
         } else {
             // Displays an error if there is not enough bananas to add a BOGO to
             this.#dialog.querySelector("#error")!
-                .textContent = "Not enough bananas in cart for a BOGO. Please "
-                + "apply BOGO to a product with a quantity of 2 or more, e.g. 3.";
+                .textContent = "Not enough of these bananas in cart for a BOGO. "
+                + "Please apply BOGO to a product with a quantity of 2 or more, "
+                + "e.g. 3.";
         }
     }
 
@@ -75,12 +104,13 @@ export default class BOGOView {
      * Adds a milk as the BOGO product
      */
     #milk() {
-        if (this.#controller.bogoMilk()) {
+        let type = this.#dialog.querySelector<HTMLSelectElement>("#type")!.value;
+        if (this.#controller.bogoMilk(type)) {
             document.body.removeChild(this.#dialog);
         } else {
             // Displays an error if there is not enough milk to add a BOGO to
             this.#dialog.querySelector("#error")!
-                .textContent = "Not enough milk in cart for a BOGO. Please "
+                .textContent = "Not enough of this milk in cart for a BOGO. Please "
                 + "apply BOGO to a product with a quantity of 2 or more, e.g. 3.";
         }
     }
