@@ -11,12 +11,14 @@ export default class Apple {
     readonly price: number = 1.5;
     #quantity: number;
     readonly volume: boolean = false;
+    #type: string;
 
     /**
      * Constructs an apple. Sets the initial quantity
      */
-    constructor() {
+    constructor(type: string) {
         this.#quantity = 0;
+        this.#type = type;
         this.#checkApple();
     }
 
@@ -26,6 +28,7 @@ export default class Apple {
     #checkApple(): void {
         assert(this.price >= 0, "Price must be at least zero.");
         assert(this.#quantity >= 0, "Quantity must be at least zero.");
+        assert(this.#type.length > 0, "Product type must have at least one character.");
     }
 
     /**
@@ -40,15 +43,17 @@ export default class Apple {
         let results = await db().query<
             {
                 id: number,
+                type: string,
                 quantity: number,
                 cart: number
             }
-        >("select id, quantity, cart from product where class = 'Apple' and cart = $1",
+        >("select id, type, quantity, cart from product where class = 'Apple' and cart = $1",
             [cart.id]);
 
         // Sets the properties of every apple
         for (let row of results.rows) {
-            let apple = new Apple();
+            console.log("type: " + row.type);
+            let apple = new Apple(row.type);
             apple.id = row.id;
             apple.increaseQuantity(row.quantity);
             allApples.push(apple);
@@ -68,8 +73,8 @@ export default class Apple {
         if (!apple.id) {
             // Inserts the apple if not already in the database
             let results = await db().query<{ id: number }>
-                ("insert into product(id, class, price, quantity, volume, cart) values(default, $1, $2, $3, $4, $5) on conflict do nothing returning id",
-                    [apple.constructor.name, apple.price, apple.quantity, apple.volume, cart.id])
+                ("insert into product(id, class, type, price, quantity, volume, cart) values(default, $1, $2, $3, $4, $5, $6) on conflict do nothing returning id",
+                    [apple.constructor.name, apple.type, apple.price, apple.quantity, apple.volume, cart.id])
 
             results.rows.forEach((row) => {
                 apple.id = row['id']
@@ -86,6 +91,10 @@ export default class Apple {
 
     get quantity(): number {
         return this.#quantity;
+    }
+
+    get type(): string {
+        return this.#type;
     }
 
     /**

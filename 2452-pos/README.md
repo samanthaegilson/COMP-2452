@@ -21,6 +21,24 @@ npx vite
 
 And then open your web browser and go to the address printed out by Vite.
 
+You can also run the file to train the Markov model on the command line using
+`npx`:
+
+```bash
+npx tsx training/training.ts
+```
+
+The output will be in a file named `model.csv` which is also located in the 
+folder called `training`. `model.csv` contains an adjacency matrix with raw 
+probabilities between [0,1].
+
+# Tests
+You can run the tests with Vitest:
+
+```bash
+npx vitest
+```
+
 # Domain model and flow diagrams
 
 * You can find my domain model in `domain.md`.

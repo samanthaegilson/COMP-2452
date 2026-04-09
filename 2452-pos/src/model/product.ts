@@ -6,6 +6,7 @@ export default interface Product {
     price: number;
     quantity: number;
     volume: boolean;
+    type: string;
     increaseQuantity(amount: number): void;
     decreaseQuantity(amount: number): boolean;
 }

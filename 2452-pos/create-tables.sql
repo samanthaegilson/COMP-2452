@@ -43,7 +43,7 @@ create table if not exists coupon (
 
 create table if not exists product_inventory (
     class varchar(255) not null,
-    type varchar(255) not null
+    type varchar(255) unique not null
 );
 
 insert into product_inventory(class, type) values ('Apple', 'Granny Smith') on conflict do nothing;

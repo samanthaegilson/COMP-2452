@@ -37,11 +37,11 @@ export default class ReceiptView {
             let prodEl = document.createElement("li");
             if (p.volume) {
                 prodEl.innerHTML = `<strong>${p.quantity + "L "
-                    + p.constructor.name + "\t$"
+                    + p.constructor.name + ": " + p.type + "\t$"
                     + (p.price * p.quantity)}</strong>`;
             } else {
                 prodEl.innerHTML = `<strong>${"x" + p.quantity + " "
-                    + p.constructor.name + "\t$"
+                    + p.constructor.name + ": " + p.type + "\t$"
                     + (p.price * p.quantity)}</strong>`;
             }
             this.#cartEL.appendChild(prodEl);

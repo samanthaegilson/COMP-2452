@@ -1,9 +1,17 @@
 import type CartController from "../controller/cart-controller";
 
+/**
+ * A view to auto shop for {@link Product}s to put in the {@link Cart}.
+ */
 export default class AutoShopperView {
     #controller: CartController;
     #dialog: HTMLDialogElement;
 
+    /**
+     * Constructs a AutoShopperView. Displays the window
+     * 
+     * @param controller the controller of the view
+     */
     constructor(controller: CartController) {
         this.#controller = controller;
 
@@ -27,6 +35,9 @@ export default class AutoShopperView {
         this.#dialog.show();
     }
 
+    /**
+     * Autoshops for products that add up to a specified amount
+     */
     #autoShop() {
         let amount = this.#dialog.querySelector<HTMLInputElement>("input[type='number']")!.valueAsNumber;
         if (Number.isInteger(amount) && amount > 0) {

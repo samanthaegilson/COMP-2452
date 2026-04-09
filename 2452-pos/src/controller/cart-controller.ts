@@ -92,10 +92,11 @@ export default class CartController {
     /**
      * Adds an apple to the cart
      * 
-     * @param amount the amount of apples to remove
+     * @param amount the amount of apples to add
+     * @param type the type of apple to add
      */
-    addApple(amount: number): void {
-        this.#cart.addProduct(new Apple(), amount);
+    addApple(amount: number, type: string): void {
+        this.#cart.addProduct(new Apple(type), amount);
         this.#appleView = undefined;
         Cart.saveCart(this.#cart);
     }
@@ -103,10 +104,11 @@ export default class CartController {
     /**
      * Adds a banana to the cart
      * 
-     * @param amount the amount of bananas to remove
+     * @param amount the amount of bananas to add
+     * @param type the type of banana to add
      */
-    addBanana(amount: number): void {
-        this.#cart.addProduct(new Banana(), amount);
+    addBanana(amount: number, type: string): void {
+        this.#cart.addProduct(new Banana(type), amount);
         this.#bananaView = undefined;
         Cart.saveCart(this.#cart);
     }
@@ -114,10 +116,11 @@ export default class CartController {
     /**
      * Adds milk to the cart
      * 
-     * @param amount the amount of milk to remove
+     * @param amount the amount of milk to add
+     * @param type the type of milk to add
      */
-    addMilk(amount: number): void {
-        this.#cart.addProduct(new Milk(), amount);
+    addMilk(amount: number, type: string): void {
+        this.#cart.addProduct(new Milk(type), amount);
         this.#milkView = undefined;
         Cart.saveCart(this.#cart);
     }
@@ -126,10 +129,11 @@ export default class CartController {
      * Removes an apple from the cart
      * 
      * @param amount the amount of apples to remove
+     * @param type the type of apple to remove
      * @returns if the apple was successfully removed or not
      */
-    removeApple(amount: number): boolean {
-        let removed = this.#cart.removeProduct(new Apple(), amount);
+    removeApple(amount: number, type: string): boolean {
+        let removed = this.#cart.removeProduct(new Apple(type), amount);
         if (removed) {
             this.#appleView = undefined;
         }
@@ -141,10 +145,11 @@ export default class CartController {
      * Removes a banana from the cart
      * 
      * @param amount the amount of bananas to remove
+     * @param type the type of banana to remove
      * @returns if the banana was successfully removed or not
      */
-    removeBanana(amount: number): boolean {
-        let removed = this.#cart.removeProduct(new Banana(), amount);
+    removeBanana(amount: number, type: string): boolean {
+        let removed = this.#cart.removeProduct(new Banana(type), amount);
         if (removed) {
             this.#bananaView = undefined;
         }
@@ -156,10 +161,11 @@ export default class CartController {
      * Removes a milk from the cart
      * 
      * @param amount the amount of milk to remove
+     * @param type the type of milk to remove
      * @returns if the milk was successfully removed or not
      */
-    removeMilk(amount: number) {
-        let removed = this.#cart.removeProduct(new Milk(), amount);
+    removeMilk(amount: number, type: string) {
+        let removed = this.#cart.removeProduct(new Milk(type), amount);
         if (removed) {
             this.#milkView = undefined;
         }
@@ -167,13 +173,18 @@ export default class CartController {
         return removed;
     }
 
+    /**
+     * Places items in the cart for the user
+     * 
+     * @param amount the amount to spend on products
+     */
     startAutoShopper(amount: number): void {
         this.#cart.autoShop(amount);
         Cart.saveCart(this.#cart);
     }
 
     /**
-     * Hides all the pop up views
+     * Hides all the product pop up views
      */
     removeViews(): void {
         this.#chooseProductView = undefined;
@@ -188,6 +199,9 @@ export default class CartController {
         this.#bananaView = undefined;
     }
 
+    /**
+     * Hides the auto shopper window
+     */
     hideAutoShopperView(): void {
         this.#autoShopperView = undefined;
     }

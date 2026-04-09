@@ -1,6 +1,10 @@
-import trainingData from './training.csv?raw';
+import fs from 'node:fs';
+import readline from 'node:readline';
 
-function training() {
+/**
+ * Trains the Markov chain with training.csv and writes output to model.csv
+ */
+async function training() {
     const ALPHABET_CONVERT = 97;
     const LENGTH = 10;
     let numerator: number[][] = Array.from({ length: LENGTH }, () => Array(LENGTH).fill(0));
@@ -11,9 +15,16 @@ function training() {
         denominator[index] = 0;
     }
 
-    const lines = trainingData.split("\n"); // Consider each line seperately
-    for (let line of lines) {
-        let data = line.split(",");
+    const fileStream = fs.createReadStream('./training/training.csv');
+
+    const rl = readline.createInterface({
+        input: fileStream,
+        crlfDelay: Infinity // Recognizes all instances of CR LF as a single line break
+    });
+
+    for await (const line of rl) {
+        // Process each line (e.g., split by comma)
+        const data = line.split(',');
         // Convert the letters to indices and increment transition
         for (let i = 1; i < data.length; i++) {
             let transition = data[i].charCodeAt(0) - ALPHABET_CONVERT;
@@ -30,10 +41,11 @@ function training() {
         percentages[row] = [];
         for (let col = 0; col < LENGTH; col++) {
             percentages[row][col] = numerator[row][col] / denominator[row];
-            console.log(percentages[row][col] + " ");
         }
-        console.log("\n");
     }
 
+    const model = percentages.map(row => row.join(',')).join('\n');
+
+    fs.writeFileSync('./training/model.csv', model);
 }
 training();

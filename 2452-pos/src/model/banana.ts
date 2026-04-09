@@ -11,12 +11,14 @@ export default class Banana {
     readonly price: number = 0.4;
     #quantity: number;
     readonly volume: boolean = false;
+    #type: string;
 
     /**
      * Constructs an apple. Sets the initial quantity
      */
-    constructor() {
+    constructor(type: string) {
         this.#quantity = 0;
+        this.#type = type;
         this.#checkBanana();
     }
 
@@ -26,6 +28,7 @@ export default class Banana {
     #checkBanana(): void {
         assert(this.price >= 0, "Price must be at least zero.");
         assert(this.#quantity >= 0, "Quantity must be at least zero.");
+        assert(this.#type.length > 0, "Product type must have at least one character.");
     }
 
     /**
@@ -40,15 +43,16 @@ export default class Banana {
         let results = await db().query<
             {
                 id: number,
+                type: string,
                 quantity: number,
                 cart: number
             }
-        >("select id, quantity, cart from product where class = 'Banana' and cart = $1",
+        >("select id, type, quantity, cart from product where class = 'Banana' and cart = $1",
             [cart.id]);
 
         // Sets the properties of every banana
         for (let row of results.rows) {
-            let banana = new Banana();
+            let banana = new Banana(row.type);
             banana.id = row.id;
             banana.increaseQuantity(row.quantity);
             allBananas.push(banana);
@@ -68,8 +72,8 @@ export default class Banana {
         if (!banana.id) {
             // Inserts the banana if not already in the database
             let results = await db().query<{ id: number }>
-                ("insert into product(id, class, price, quantity, volume, cart) values(default, $1, $2, $3, $4, $5) on conflict do nothing returning id",
-                    [banana.constructor.name, banana.price, banana.quantity, banana.volume, cart.id])
+                ("insert into product(id, class, type, price, quantity, volume, cart) values(default, $1, $2, $3, $4, $5, $6) on conflict do nothing returning id",
+                    [banana.constructor.name, banana.type, banana.price, banana.quantity, banana.volume, cart.id])
 
             results.rows.forEach((row) => {
                 banana.id = row['id']
@@ -86,6 +90,10 @@ export default class Banana {
 
     get quantity(): number {
         return this.#quantity;
+    }
+
+    get type(): string {
+        return this.#type;
     }
 
     /**

@@ -10,12 +10,14 @@ export default class Milk {
     readonly price: number = 2.00;
     #quantity: number;
     readonly volume: boolean = true; // Measured in litres
+    #type: string;
 
     /**
      * Constructs a milk. Sets the initial quantity
      */
-    constructor() {
+    constructor(type: string) {
         this.#quantity = 0;
+        this.#type = type;
         this.#checkMilk();
     }
 
@@ -25,6 +27,7 @@ export default class Milk {
     #checkMilk(): void {
         assert(this.price >= 0, "Price must be at least zero.");
         assert(this.#quantity >= 0, "Quantity must be at least zero.");
+        assert(this.#type.length > 0, "Product type must have at least one character.");
     }
 
     /**
@@ -39,15 +42,16 @@ export default class Milk {
         let results = await db().query<
             {
                 id: number,
+                type: string,
                 quantity: number,
                 cart: number
             }
-        >("select id, quantity, cart from product where class = 'Milk' and cart = $1",
+        >("select id, type, quantity, cart from product where class = 'Milk' and cart = $1",
             [cart.id]);
 
         // Sets the properties of every milk
         for (let row of results.rows) {
-            let milk = new Milk();
+            let milk = new Milk(row.type);
             milk.id = row.id;
             milk.increaseQuantity(row.quantity);
             allMilks.push(milk);
@@ -67,8 +71,8 @@ export default class Milk {
         if (!milk.id) {
             // Inserts the milk if not already in the database
             let results = await db().query<{ id: number }>
-                ("insert into product(id, class, price, quantity, volume, cart) values(default, $1, $2, $3, $4, $5) on conflict do nothing returning id",
-                    [milk.constructor.name, milk.price, milk.quantity, milk.volume, cart.id])
+                ("insert into product(id, class, type, price, quantity, volume, cart) values(default, $1, $2, $3, $4, $5, $6) on conflict do nothing returning id",
+                    [milk.constructor.name, milk.type, milk.price, milk.quantity, milk.volume, cart.id])
 
             results.rows.forEach((row) => {
                 milk.id = row['id']
@@ -85,6 +89,10 @@ export default class Milk {
 
     get quantity(): number {
         return this.#quantity;
+    }
+
+    get type(): string {
+        return this.#type;
     }
 
     /**

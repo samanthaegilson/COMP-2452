@@ -21,6 +21,14 @@ export default class AppleView {
         this.#dialog.innerHTML = `
             <span id="error"></span><br />
             <label for="appleView">Apple</label>
+            <label for="type">Type</label>
+            <select name="type" id="type">
+                <option value="Granny Smith">Granny Smith</option>
+                <option value="Gala">Gala</option>
+                <option value="Honeycrisp">Honeycrisp</option>
+                <option value="Ambrosia">Ambrosia</option>
+                <option value="McIntosh">McIntosh</option>
+            </select>
             <label for="amount">Amount</label>
             <input type="number" id="amount"/>
             <button id="addApple">Add Apple</button>
@@ -45,9 +53,10 @@ export default class AppleView {
      */
     #addApple() {
         let amount = this.#dialog.querySelector<HTMLInputElement>("input[type='number']")!.valueAsNumber;
+        let type = this.#dialog.querySelector<HTMLSelectElement>("#type")!.value;
         // Checks the number is a valid integer
         if (Number.isInteger(amount) && amount > 0) {
-            this.#controller.addApple(amount);
+            this.#controller.addApple(amount, type);
             document.body.removeChild(this.#dialog);
         } else {
             this.#dialog.querySelector("#error")!
@@ -60,9 +69,10 @@ export default class AppleView {
      */
     #removeApple() {
         let amount = this.#dialog.querySelector<HTMLInputElement>("input[type='number']")!.valueAsNumber;
+        let type = this.#dialog.querySelector<HTMLSelectElement>("type")!.value;
         // Checks the number is a valid integer
         if (Number.isInteger(amount) && amount > 0) {
-            let removed = this.#controller.removeApple(amount);
+            let removed = this.#controller.removeApple(amount, type);
             if (removed) {
                 document.body.removeChild(this.#dialog);
             } else {

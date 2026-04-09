@@ -66,7 +66,6 @@ export default class CartView {
      * Opens the receipt view
      */
     #showReceipt() {
-        // this.#controller.showReceiptView();
         try {
             this.#controller.showReceiptView();
         } catch (e: any) {
@@ -84,7 +83,7 @@ export default class CartView {
      * Opens the auto shopper view
      */
     #showAutoShopper() {
-
+        this.#controller.showAutoShopper();
     }
 
     /**
@@ -98,11 +97,11 @@ export default class CartView {
         this.#cart.products.forEach((p) => {
             let prodEl = document.createElement("li");
             if (p.volume) {
-                prodEl.innerHTML = `<strong>${p.constructor.name + " "
-                    + p.quantity + "L"}</strong>`;
+                prodEl.innerHTML = `<strong>${p.constructor.name + ": " + p.type
+                    + " " + p.quantity + "L"}</strong>`;
             } else {
-                prodEl.innerHTML = `<strong>${p.constructor.name + " x"
-                    + p.quantity}</strong>`;
+                prodEl.innerHTML = `<strong>${p.constructor.name + ": " + p.type
+                    + " x" + p.quantity}</strong>`;
             }
             this.#productsEL.appendChild(prodEl);
         })

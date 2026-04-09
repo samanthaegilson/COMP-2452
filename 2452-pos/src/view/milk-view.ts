@@ -18,13 +18,19 @@ export default class MilkView {
         this.#dialog = document.createElement("dialog");
         this.#dialog.id = "apple-info";
         this.#dialog.innerHTML = `
-                <span id="error"></span><br />
-                <label for="milkView">Milk</label>
-                <label for="volume">Volume</label>
-                <input type="number" id="volume"/>
-                <button id="addMilk">Add Milk</button>
-                <button id="removeMilk">Remove Milk</button>
-                <button id="cancel">Cancel</button>`
+            <span id="error"></span><br />
+            <label for="milkView">Milk</label>
+            <label for="type">Type</label>
+            <select name="type" id="type">
+                <option value="Almond">Almond</option>
+                <option value="Whole">Whole</option>
+                <option value="Skim">Skim</option>
+            </select>
+            <label for="volume">Volume</label>
+            <input type="number" id="volume"/>
+            <button id="addMilk">Add Milk</button>
+            <button id="removeMilk">Remove Milk</button>
+            <button id="cancel">Cancel</button>`
 
         this.#dialog.querySelector("#addMilk")!
             .addEventListener("click", () => this.#addMilk());
@@ -44,9 +50,10 @@ export default class MilkView {
      */
     #addMilk() {
         let amount = this.#dialog.querySelector<HTMLInputElement>("input[type='number']")!.valueAsNumber;
+        let type = this.#dialog.querySelector<HTMLSelectElement>("#type")!.value;
         // Checks the number is a valid integer
         if (Number.isInteger(amount) && amount > 0) {
-            this.#controller.addMilk(amount);
+            this.#controller.addMilk(amount, type);
             document.body.removeChild(this.#dialog);
         } else {
             this.#dialog.querySelector("#error")!
@@ -59,9 +66,10 @@ export default class MilkView {
      */
     #removeMilk() {
         let amount = this.#dialog.querySelector<HTMLInputElement>("input[type='number']")!.valueAsNumber;
+        let type = this.#dialog.querySelector<HTMLSelectElement>("type")!.value;
         // Checks the number is a valid integer
         if (Number.isInteger(amount) && amount > 0) {
-            let removed = this.#controller.removeMilk(amount);
+            let removed = this.#controller.removeMilk(amount, type);
             if (removed) {
                 document.body.removeChild(this.#dialog);
             } else {

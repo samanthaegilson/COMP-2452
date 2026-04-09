@@ -1,3 +1,4 @@
+import seedrandom from 'seedrandom';
 import { assert } from '../assertions.ts';
 import Apple from './apple.ts';
 import Banana from './banana.ts';
@@ -13,6 +14,7 @@ export default class Cart {
     id?: number;
     #products: Array<Product>;
     #listeners: Array<Listener>;
+    static model: number[][];
 
     /**
      * Constructs a cart. Initializes the list of products
@@ -110,6 +112,39 @@ export default class Cart {
         return product;
     }
 
+    /**
+     * Loads the possible products from the product inventory
+     * 
+     * @returns the possible products to purchase
+     */
+    static async getInventoryProducts(): Promise<Array<Product>> {
+        const APPLE = "Apple";
+        const BANANA = "Banana";
+        const allProducts = new Array<Product>();
+
+        let results = await db().query<
+            {
+                class: string,
+                type: string
+            }
+        >("select class, type from product_inventory");
+
+        for (let row of results.rows) {
+            let product;
+            if (row.class == APPLE) {
+                product = new Apple(row.type);
+            } else if (row.class == BANANA) {
+                product = new Banana(row.type);
+            } else {
+                product = new Milk(row.type);
+            }
+
+            allProducts.push(product);
+        }
+
+        return allProducts;
+    }
+
     get products(): Array<Product> {
         return this.#products;
     }
@@ -127,7 +162,8 @@ export default class Cart {
 
         // Checks if the product is in the cart already
         while (!found && index < this.#products.length) {
-            if (product.constructor === this.#products[index].constructor) {
+            if (product.constructor === this.#products[index].constructor
+                && product.type === this.#products[index].type) {
                 // If the product is in the cart, increases the quantity
                 this.#products[index].increaseQuantity(amount);
                 found = true;
@@ -160,7 +196,8 @@ export default class Cart {
 
         // Checks if the product is in the cart
         while (!found && index < this.#products.length) {
-            if (product.constructor === this.#products[index].constructor) {
+            if (product.constructor === this.#products[index].constructor
+                && product.type === this.#products[index].type) {
                 found = true;
                 // Decreases the quantity of the product
                 if (this.#products[index].decreaseQuantity(amount)) {
@@ -181,19 +218,67 @@ export default class Cart {
         return removed;
     }
 
+    /**
+     * Puts products chosen by a Markov chain into the cart
+     * 
+     * @param amount the amount to spend on the products
+     */
     autoShop(amount: number): void {
         this.#checkCart();
 
-        // 1. generate random number between 0 and 1
-        // 2. iterate over row (outgoing edges) & keep a sum of the numbers
-        // 3. check if the sum is bigger than or equal to the random number, 
-        // that's the transition
+        let products = [];
+        let done = false;
+        let found = false;
+        let lastProductType = "";
+        let lastProductIndex = 0;
 
-        // subtract price of product from total, if the total is below 0 stop, 
-        // if not, add that product to the cart
+        if (this.#products.length > 0) {
+            lastProductType = this.#products[this.#products.length - 1].type;
+            found = true;
+        }
 
-        this.#notifyAll();
-        this.#checkCart();
+        let inventoryPromise = Cart.getInventoryProducts();
+        inventoryPromise.then((inventory) => {
+            // Finding index of last product in cart
+            let index = 0;
+            while (!found && index < inventory.length) {
+                if (inventory[index].type === lastProductType) {
+                    lastProductIndex = index;
+                }
+                index++;
+            }
+
+            let currProduct = 0;
+            let currTransition = lastProductIndex;
+
+            while (!done) {
+                let random = seedrandom().double();
+                let sum = 0;
+                while (sum < random) {
+                    sum += Cart.model[currProduct][currTransition];
+                    currTransition++;
+                }
+                currTransition--; // Adjusting
+
+                if (amount - inventory[currTransition].price > 0) {
+                    amount -= inventory[currTransition].price;
+                    products.push(inventory[currTransition]);
+                    currProduct = currTransition;
+                    currTransition = 0;
+                } else {
+                    done = true;
+                }
+            }
+
+            // Add the generated products to the cart
+            for (let product of products) {
+                this.addProduct(product, 1);
+            }
+
+            this.#notifyAll();
+            Cart.saveCart(this);
+            this.#checkCart();
+        })
     }
 
     /**

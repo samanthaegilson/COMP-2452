@@ -17,6 +17,8 @@
   },
   "dependencies": {
     "@electric-sql/pglite": "^0.3.16",
-    "@js-temporal/polyfill": "^0.5.1"
+    "@js-temporal/polyfill": "^0.5.1",
+    "@types/seedrandom": "^3.0.8",
+    "seedrandom": "^3.0.5"
   }
 }

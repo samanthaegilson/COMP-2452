@@ -21,6 +21,11 @@ export default class BananaView {
         this.#dialog.innerHTML = `
             <span id="error"></span><br />
             <label for="bananaView">Banana</label>
+            <label for="type">Type</label>
+            <select name="type" id="type">
+                <option value="Cavendish">Cavendish</option>
+                <option value="Plantain">Plantain</option>
+            </select>
             <label for="amount">Amount</label>
             <input type="number" id="amount"/>
             <button id="addBanana">Add Banana</button>
@@ -45,9 +50,10 @@ export default class BananaView {
      */
     #addBanana() {
         let amount = this.#dialog.querySelector<HTMLInputElement>("input[type='number']")!.valueAsNumber;
+        let type = this.#dialog.querySelector<HTMLSelectElement>("#type")!.value;
         // Checks the number is a valid integer
         if (Number.isInteger(amount) && amount > 0) {
-            this.#controller.addBanana(amount);
+            this.#controller.addBanana(amount, type);
             document.body.removeChild(this.#dialog);
         } else {
             this.#dialog.querySelector("#error")!
@@ -60,9 +66,10 @@ export default class BananaView {
      */
     #removeBanana() {
         let amount = this.#dialog.querySelector<HTMLInputElement>("input[type='number']")!.valueAsNumber;
+        let type = this.#dialog.querySelector<HTMLSelectElement>("type")!.value;
         // Checks the number is a valid integer
         if (Number.isInteger(amount) && amount > 0) {
-            let removed = this.#controller.removeBanana(amount);
+            let removed = this.#controller.removeBanana(amount, type);
             if (removed) {
                 document.body.removeChild(this.#dialog);
             } else {
