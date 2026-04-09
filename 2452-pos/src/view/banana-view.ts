@@ -66,7 +66,7 @@ export default class BananaView {
      */
     #removeBanana() {
         let amount = this.#dialog.querySelector<HTMLInputElement>("input[type='number']")!.valueAsNumber;
-        let type = this.#dialog.querySelector<HTMLSelectElement>("type")!.value;
+        let type = this.#dialog.querySelector<HTMLSelectElement>("#type")!.value;
         // Checks the number is a valid integer
         if (Number.isInteger(amount) && amount > 0) {
             let removed = this.#controller.removeBanana(amount, type);
